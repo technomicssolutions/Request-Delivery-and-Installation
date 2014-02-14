@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up
+{% endblock title %}
+{% block controller %}
+  ng-controller="SignupController" ng-init="init('{{csrf_token}}')"   
+{% endblock controller %}
+{% block body_id %}signup{% endblock %}"  
+
+{% block content %}
+
+	<div class="main_container">
+		<div class="signup_form">
+			<form name="sognup_content">{% csrf_token %}
+				<label>First Name</label>
+				<input type="text" name="firstname" ng-model="firstname">
+				<label>Last Name</label>
+				<input type="text" name="lastname" ng-model="lastname">
+				<label>Username</label>
+				<input type="text" name="username" ng-model="username">
+				<label>Password</label>
+				<input type="password" name="password" ng-model="password">
+				<label>Email ID</label>
+				<input type="text" name="email" ng-model="email">
+				<label>User Type</label>
+				<select ng-model="user_type" ng-change="is_user_type_vendor()">
+					<option value="select">Select</option>
+					<option value="customer/dealer">Customer/Dealer</option>
+					<option value="sales_executive">Sales Executive</option>
+					<option value="internal_technician">Internal Technician</option>
+					<option value="vendors">Vendors</option>
+				</select>
+				<div ng-show="is_vendor">
+					<label>Brand</label>
+					<input type="text" name="brand" ng-model="brand">
+				</div>
+				<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
+				<div class="buttons">
+					<input type="submit" ng-click="signup()" value="Signup">
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock content %}

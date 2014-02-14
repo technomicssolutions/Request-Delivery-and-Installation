@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Log In
+{% endblock title %}
+{% block controller %}
+  ng-controller="LoginController" ng-init="init('{{csrf_token}}')"   
+{% endblock controller %}
+{% block body_id %}login{% endblock %}"  
+
+{% block content %}
+
+	<div class="main_container">
+		<div class="login_form">
+			<form name="login_content">{% csrf_token %}
+				<label>Username</label>
+				<input type="text" name="username" ng-model="username">
+				<label>Password</label>
+				<input type="password" name="password" ng-model="password">
+				<div class="buttons">
+					<input type="submit" ng-click="login()" value="Login">
+					<a href="{% url 'register' %}">Register</a>
+				</div>
+				<p ng-show="error_flag">[[error_message]]</p>
+			</form>
+		</div>
+	</div>
+
+{% endblock content %}

@@ -1,0 +1,98 @@
+body {
+	background-color: #FFFFFF;
+    color: #2C3E50;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    margin: 0;
+}
+.main_container {
+	margin: auto;
+	min-height: 300px;
+    width: 100%;
+}
+.login_form {
+	margin: 140px auto auto;
+ 	min-height: 123px;
+    padding: 15px;
+    width: 270px;
+}
+.signup_form {
+	margin: 140px auto auto;
+ 	min-height: 123px;
+    padding: 15px;
+    width: 265px;
+}
+form {
+	height: 100%;
+	width: 100%;
+}
+.buttons {
+	margin: 5px 0px 0px 0px;
+}
+.error_msg {
+    color: #ff0000;
+}
+.contents {
+    border-radius: 5px;
+    box-shadow: 5px 5px 12px 0 #888888;
+    min-height: 500px;
+    margin: 60px auto 125px;
+    width: 1024px;
+}
+.nav {
+    width: 100%;
+    height: 60px;
+    padding-top: 30px;
+}
+.nav_right {
+    float: right;
+    margin-right: 45px;
+}
+.nav_left{
+    float: left;
+    margin-left: 44px;
+}
+.nav_left p {
+    margin: 0px;
+}
+h1 {
+    text-align: center;
+    padding: 0 0 25px 0;
+    margin-bottom: 0;
+}
+.form_content {
+    width: 44%;
+    height: 100%;
+    padding: 15px 0 15px 0;
+    margin: auto;
+}
+.form_content form {
+    height: 100%;
+    width: 53%;
+    margin: auto;
+}
+.subcontent_table td, th {
+    border-color: #E6E6E6;
+    padding: 0px 7px 0 7px;
+}
+
+.subcontent_table {
+    border-color: #E6E6E6;
+    margin: auto;
+    text-align: center;
+    font-size: 14px;
+}
+.subcontent_table th{
+    height: 30px;
+}
+
+.subcontent_table .odd{
+    background-color: #F9F9F9;
+}
+.subcontent_table .even{
+    background-color: #FFFFFF;
+}
+textarea {
+    width: 232px;
+}
