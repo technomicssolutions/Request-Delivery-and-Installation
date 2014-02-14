@@ -8,11 +8,22 @@ from django.contrib.auth.models import User
 from django.conf import settings
 import simplejson
 from web.models import *
+import datetime
+from datetime import timedelta
+
 
 class Home(View):
     def get(self, request, *args, **kwargs):
         context = {}
-        purchase_info = PurchaseInformation.objects.all()
+        user = request.user
+        if user.userprofile_set.all()[0].user_type == 'vendors':
+            current_date = datetime.datetime.now()
+            print "current_date == ", current_date
+            last_two_months = current_date - datetime.timedelta(days=3*30)
+            print "last 2 months == ", last_two_months
+            purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months)
+        else:
+            purchase_info = PurchaseInformation.objects.all()
         if purchase_info:
             context = {
                 'purchases': purchase_info,
@@ -125,11 +136,9 @@ class AddPurchanseInfo(View):
         try:
             status_code = 200
             purchases = PurchaseInformation.objects.all().count()
-            print purchases
             if int(purchases) > 0:
                 latest_purchase = PurchaseInformation.objects.latest('id')
                 sl_no = int(latest_purchase.slno) + 1
-                print "sl no == ", sl_no
             else:
                 sl_no = 1
             purchase_info = PurchaseInformation()
@@ -137,6 +146,7 @@ class AddPurchanseInfo(View):
             purchase_info.date = post_dict['date']
             purchase_info.slno = sl_no
             purchase_info.dealer_po_number = post_dict['dealer_po_number']
+            purchase_info.invoice_no = post_dict['invoice_no']
             purchase_info.dealer_name = post_dict['dealer_name']
             purchase_info.dealer_purchase_in_charge = post_dict['dealer_purchase_in_charge']
             purchase_info.purchaser_sales_man = post_dict['purchaser_sales_man']
@@ -145,14 +155,14 @@ class AddPurchanseInfo(View):
             purchase_info.address = post_dict['address'] 
             purchase_info.contact_person = post_dict['contact_person']
             purchase_info.contact_number = post_dict['contact_no']
-            purchase_info.save()
-            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=post_dict['delivery_requested_date'])
-            purchase_info.delivery_requested_date.add(quantity_delivery_date) 
             purchase_info.installation_requested_date = post_dict['installation_requested_date']
             purchase_info.extra_man_power_request = post_dict['extra_man_power']
             purchase_info.remarks = post_dict['remarks']
             purchase_info.save()
-            response = simplejson.dumps({'result': 'error', 'message': 'message'})
+            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=post_dict['delivery_requested_date'])
+            purchase_info.delivery_requested_date.add(quantity_delivery_date) 
+            purchase_info.save()
+            response = simplejson.dumps({'result': 'success', 'message': 'Successfully added'})
         except Exception as ex:
             response = simplejson.dumps({'result': 'error', 'message': str(ex)})
             status_code = 500
@@ -169,6 +179,15 @@ class FetchBrandNames(View):
         response = simplejson.dumps({'result': 'sucess', 'brands': ctx_brands})
         status_code = 200
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
+
+class PurchaseInfoView(View):
+
+    def get(self, request, *args, **kwargs):
+        purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
+        context = {
+            'purchase': purchase_info,
+        }
+        return render(request, 'view_purchase_info.html', context)
 
 
 

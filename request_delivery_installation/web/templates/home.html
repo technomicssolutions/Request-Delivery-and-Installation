@@ -1,25 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}Home
 {% endblock title %}
-{% block controller %}
-  ng-controller="SignupController" ng-init="init('{{csrf_token}}')"   
+{% block controller %}   
 {% endblock controller %}
 {% block body_id %}home{% endblock %}"  
 
 {% block content %}
 	<div class="contents">
-		<div class="nav">
-			<div class="nav_right">
-				<a href="{% url 'logout' %}">Logout</a>
-				<a href="{% url 'add_purchase_info' %}">Add Purchase Info</a>
-				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
-					<a href="{% url 'add_subdealer' user_id=user.id%}">Add Sub Dealers</a>
-				{% endif %}
-			</div>
-			<div class="nav_left">
-				<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
-			</div>	
-		</div>
+		{% include 'header.html' %}
 		<div class="subcontents">
 			<table border="1" class="subcontent_table" cellspacing="0">
 				<tr>
@@ -36,15 +24,15 @@
 				{% if purchases %}
 					{% for purchase in purchases %}
 						<tr class="{% cycle 'odd' 'even' %}">
-							<th>purchase.slno</th>
-							<th>purchase.date</th>
-							<th>purchase.dealer_po_number</th>
-							<th>purchase.dealer_name</th>
-							<th>purchase.dealer_purchase_in_charge</th>
-							<th>purchase.purchaser_sales_man</th>
-							<th>purchase.brand</th>
-							<th>purchase.model</th>
-							<th><a href="">View</a></th>
+							<th>{{purchase.slno}}</th>
+							<th>{{purchase.date}}</th>
+							<th>{{purchase.dealer_po_number}}</th>
+							<th>{{purchase.dealer_name}}</th>
+							<th>{{purchase.dealer_purchase_in_charge}}</th>
+							<th>{{purchase.purchaser_sales_man}}</th>
+							<th>{{purchase.brand}}</th>
+							<th>{{purchase.model}}</th>
+							<th><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></th>
 						</tr>	
 					{% endfor %}
 				{% endif %}

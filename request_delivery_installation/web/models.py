@@ -62,6 +62,7 @@ class PurchaseInformation(Dates):
     date = models.DateField('Date', null=True, blank=True)
     slno = models.CharField('Sl No', max_length=10, null=True, blank=True)
     dealer_po_number = models.CharField('Dealer PO Number', max_length=30)
+    invoice_no = models.CharField('Invoice Number', max_length=30)
     dealer_name = models.CharField('Dealer Name', max_length=30)
     dealer_purchase_in_charge = models.CharField('Name of Dealer Purchaser-In-Charge', max_length=30)
     purchaser_sales_man = models.CharField('Purchaser Sales Man', max_length=30)

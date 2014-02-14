@@ -16,6 +16,8 @@ body {
  	min-height: 123px;
     padding: 15px;
     width: 270px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 12px 0 #888888;
 }
 .signup_form {
 	margin: 140px auto auto;
@@ -56,7 +58,7 @@ form {
 .nav_left p {
     margin: 0px;
 }
-h1 {
+h1,h2{
     text-align: center;
     padding: 0 0 25px 0;
     margin-bottom: 0;
@@ -71,6 +73,11 @@ h1 {
     height: 100%;
     width: 53%;
     margin: auto;
+}
+.subcontents {
+    width: auto;
+    height: auto;
+    margin: 0 20px 0 20px;
 }
 .subcontent_table td, th {
     border-color: #E6E6E6;
@@ -95,4 +102,10 @@ h1 {
 }
 textarea {
     width: 232px;
+}
+#view_purchase_info .form_content{
+    width:85%;
+}
+#view_purchase_info .form_content label {
+    font-weight: bold;
 }

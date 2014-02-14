@@ -234,6 +234,10 @@ function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
 	        $scope.error_message = 'Please Enter Dealer PO Number';
 	        $scope.error_flag = true;
 	        return false;
+	    } else if ($scope.invoice_no == undefined || $scope.invoice_no == '') {
+	    	$scope.error_message = 'Please Enter Invoice Number';
+	        $scope.error_flag = true;
+	        return false;
 	    } else if($scope.dealer_name == undefined || $scope.dealer_name == '') {
 	        $scope.error_message = 'Please Enter Dealer Name';
 	        $scope.error_flag = true;
@@ -247,16 +251,11 @@ function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
 	        $scope.error_flag = true;
 	        return false;
 	    }
-	    // else if($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?') {
-	    // 	alert($scope.new_brand);
-	    // 	if ($scope.new_brand == undefined || $scope.new_brand == '') {
-	    // 		alert('hi');
-	    // 		$scope.error_message = 'Please Choose or Add Brand Name';
-		   //      $scope.error_flag = true;
-		   //      return false;
-	    // 	} 
-	    // 	return true;
-	    // } 
+	    else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?') && ($scope.new_brand == undefined || $scope.new_brand == '')) {
+    		$scope.error_message = 'Please Choose or Add Brand Name';
+	        $scope.error_flag = true;
+	        return false;
+	    } 
 	    else if($scope.model == undefined || $scope.model == '' ) {
 	    	$scope.error_message = 'Please Enter Model';
 	        $scope.error_flag = true;
@@ -307,6 +306,7 @@ function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
     		params = {
 		    	'date': $scope.date,
 		    	'dealer_po_number': $scope.dealer_po_number,
+		    	'invoice_no': $scope.invoice_no,
 		        'dealer_name': $scope.dealer_name,
 		        'dealer_purchase_in_charge': $scope.dealer_purchase_in_charge,
 		        'purchaser_sales_man': $scope.purchaser_sales_man,
@@ -335,14 +335,7 @@ function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
 		            $scope.error_message = data.message;
 		            $scope.error_flag = true;
 		        } else {
-		      //       $scope.username = '';
-		      //       $scope.password = '';
-		      //       $scope.firstname = '';
-		    		// $scope.lastname = '';
-		      //   	$scope.email = '';
-		      //   	$scope.user_type = '';
-		      //   	$scope.brand = '';
-		      //       document.location.href = '/';
+		            document.location.href = '/';
 		        }             
 		    }).error(function(data, status)
 		    {

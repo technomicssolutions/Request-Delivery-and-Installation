@@ -8,18 +8,7 @@
 	
 {% block content %}
 	<div class="contents">
-		<div class="nav">
-			<div class="nav_right">
-				<a href="{% url 'logout' %}">Logout</a>
-				<a href="">Add Purchase Info</a>
-				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
-					<a href="{% url 'add_subdealer' user_id=user.id%}">Add Sub Dealers</a>
-				{% endif %}
-			</div>
-			<div class="nav_left">
-				<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
-			</div>
-		</div>
+		{% include 'header.html' %}
 		<div class="add_subdealer">
 			{% if  message %}
 				<span>{{ message }}</span>

@@ -8,26 +8,17 @@
 	
 {% block content %}
 	<div class="contents">
-		<div class="nav">
-			<div class="nav_right">
-				<a href="{% url 'logout' %}">Logout</a>
-				<a href="">Add Purchase Info</a>
-				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
-					<a href="{% url 'add_subdealer' user_id=user.id%}">Add Sub Dealers</a>
-				{% endif %}
-			</div>
-			<div class="nav_left">
-				<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
-			</div>
-		</div>
+		{% include 'header.html' %}
 		<div class="add_subdealer"> 
 			<h1>Add SubDealer</h1>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
 					<label>Date</label>
-					<input type="text" name="date" ng-model="date" placeholder="format: yyyy/mm/dd">
+					<input type="text" name="date" ng-model="date" placeholder="format: yyyy-mm-dd">
 					<label>Dealer PO Number</label>
 					<input type="text" name="dealer_po_number" ng-model="dealer_po_number">
+					<label>Invoice Number</label>
+					<input type="text" name="invoice_no" ng-model="invoice_no">
 					<label>Dealer Name</label>
 					<input type="text" name="dealer_name" ng-model="dealer_name">
 					<label>Dealer Purchase in Charge</label>
@@ -51,9 +42,9 @@
 					<label>Quantity</label>
 					<input type="text" name="quantity" ng-model="quantity">
 					<label>Delivery Requested Date</label>
-					<input type="text" name="delivery_requested_date" ng-model="delivery_requested_date" placeholder="format: yyyy/mm/dd">
+					<input type="text" name="delivery_requested_date" ng-model="delivery_requested_date" placeholder="format: yyyy-mm-dd">
 					<label>Installation Requested Date</label>
-					<input type="text" name="installation_requested_date" ng-model="installation_requested_date" placeholder="format: yyyy/mm/dd">
+					<input type="text" name="installation_requested_date" ng-model="installation_requested_date" placeholder="format: yyyy-mm-dd">
 					<label>Extra Man Power</label>
 					<input type="text" name="extra_man_power" ng-model="extra_man_power">
 					<label>Remarks</label>
