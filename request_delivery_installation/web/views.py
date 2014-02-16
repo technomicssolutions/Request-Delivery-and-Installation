@@ -18,9 +18,7 @@ class Home(View):
         user = request.user
         if user.userprofile_set.all()[0].user_type == 'vendors':
             current_date = datetime.datetime.now()
-            print "current_date == ", current_date
             last_two_months = current_date - datetime.timedelta(days=3*30)
-            print "last 2 months == ", last_two_months
             purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months)
         else:
             purchase_info = PurchaseInformation.objects.all()
@@ -183,11 +181,45 @@ class FetchBrandNames(View):
 class PurchaseInfoView(View):
 
     def get(self, request, *args, **kwargs):
+
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         context = {
             'purchase': purchase_info,
         }
         return render(request, 'view_purchase_info.html', context)
+    def post(self, request, *args, **kwargs):
+        post_dict = request.POST
+        purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
+        try:
+
+            quantity = ''
+            delivery_date = ''
+            for purchase_detail in purchase_info.delivery_requested_date.all():
+                quantity = purchase_detail.quantity
+                delivery_date = purchase_detail.delivery_date
+            if delivery_date != post_dict['delivery_requested_date']:
+                quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
+                purchase_info.delivery_requested_express_delivery = 'Changed the delivery requested date for quantities : ',quantity,', from date : ',\
+                 delivery_date, ', to date : ', post_dict['delivery_requested_date']
+                purchase_info.delivery_requested_date.clear()
+                purchase_info.delivery_requested_date_change = purchase_info.delivery_requested_date_change + 1
+                purchase_info.delivery_requested_date.add(quantity_delivery_date) 
+                purchase_info.save()
+            if purchase_info.installation_requested_date != post_dict['installation_requested_date']:
+                purchase_info.installation_requested_express_delivery = 'Changed the Installation request date from date : ',\
+                 purchase_info.installation_requested_date, ', to date : ', post_dict['installation_requested_date']
+                purchase_info.installation_requested_date = post_dict['installation_requested_date']
+                purchase_info.save()            
+            context = {'result': 'success', 'message': 'Successfully Edited','purchase': purchase_info,}
+        except Exception as ex:
+            print "except == ", str(ex)
+            context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}
+        return render(request,'view_purchase_info.html', context)
+
+
+
+        
+
 
 
 

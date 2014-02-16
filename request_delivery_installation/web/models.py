@@ -50,8 +50,8 @@ class QuantityDeliveryDate(Dates):
     quantity = models.IntegerField('Quantity', default=0)
     delivery_date = models.DateField('Delivery Date')
 
-    def __unicode__(self):
-        return self.delivery_date
+    # def __unicode__(self):
+    #     return self.delivery_date
     
     class Meta:
         verbose_name = 'Quantity Delivery Date'

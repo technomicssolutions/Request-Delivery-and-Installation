@@ -202,15 +202,16 @@ function AddSubDealerController($scope, $element, $http, $timeout, $location)
     }
 }
 
-function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
+function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $location)
 {
 	$scope.error_flag = false;
 	$scope.other_brand_flag = false;
 	$scope.brand_val = '';
-	$scope.init = function(csrf_token, user_id)
+	$scope.init = function(csrf_token, user_id, purchase_id)
     {
         $scope.csrf_token = csrf_token;  
         $scope.user_id = user_id;
+        $scope.purchase_id = purchase_id;
         $http.get('/fetch_brand_names/').success(function(data)
         {
             $scope.brands = data.brands;
@@ -343,6 +344,34 @@ function AddPurchaseInfoController($scope, $element, $http, $timeout, $location)
 		        $scope.error_flag = true;
 		    }); 
     	}
+    }
+    $scope.edit_purchase_info = function(){
+    	params = {
+	    	'delivery_requested_date':$scope.delivery_requested_date,
+	        'installation_requested_date':$scope.installation_requested_date,
+	        "csrfmiddlewaretoken" : $scope.csrf_token
+	    }
+	    $http({
+	        method : 'Post',
+	        url : "/purchase_info/"+$scope.purchase_id+'/',
+	        data : $.param(params),
+	        headers : {
+	        'Content-Type' : 'application/x-www-form-urlencoded'
+	        }
+	    }).success(function(data, status)
+	    {
+	        if(data.result == 'error'){
+	            $scope.error_message = data.message;
+	            $scope.error_flag = true;
+	        } else {
+	        	console.log(data);
+	            // document.location.href = '/';
+	        }             
+	    }).error(function(data, status)
+	    {
+	        $scope.error_message = data.message;
+	        $scope.error_flag = true;
+	    });
     }
 
 }

@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Home
 {% endblock title %}
-{% block controller %}   
-{% endblock controller %}
 {% block body_id %}view_purchase_info{% endblock %}"  
-
+{% block controller %}
+  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '{{purchase.id}}')"   
+{% endblock controller %}
 {% block content %}
+
 	<div class="contents">
+		{% include 'header.html' %}
+		
 		<div class="form_content">
 			<h2>Puchase No : {{purchase.slno}}</h2>
-			<form name="add_subdealer_content">{% csrf_token %}
+			<form name="add_subdealer_content" method="post" action="{% url 'purchase_info' purchase_info_id=purchase.id %}">{% csrf_token %}
 				<label>Created By : </label>
 				<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
 				<br>
@@ -58,16 +61,30 @@
 				<span>{{purchase.contact_number}}</span>
 				<br>
 				<br>
-				<label>Quantity : </label>
-				<span>{{purchase.delivery_requested_date.quantity}}</span>
-				<br>
-				<br>
-				<label>Delivery Requested Date : </label>
-				<input type="text" name="delivery_requested_date" value="delivery_requested_date" placeholder="format: yyyy-mm-dd">
+				{% for delivery_details in purchase.delivery_requested_date.all%}
+				
+					<label>Quantity : </label>
+					<span>{{delivery_details.quantity}}</span>
+					<br>
+					<br>
+					<label>Delivery Requested Date : </label>
+					{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+						<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" placeholder="format: yyyy-mm-dd">
+						<span>Format should be in ' yyyy-mm-dd '</span>
+					{% else %}
+						<span> {{delivery_details.delivery_date}} </span>
+					{% endif %}
+				
+				{% endfor %}
 				<br>
 				<br>
 				<label>Installation Requested Date : </label>
-				<input type="text" name="installation_requested_date" value="installation_requested_date" placeholder="format: yyyy-mm-dd">
+				{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+					<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date|date:'Y-m-j'}}" placeholder="format: yyyy-mm-dd">
+					<span> Format should be in ' yyyy-mm-dd '</span>
+				{% else %}
+					<span> {{purchase.installation_requested_date}} </span>
+				{% endif %}
 				<br>
 				<br>
 				<label>Extra Man Power : </label>
@@ -78,9 +95,11 @@
 				<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
 				<br>
 				<br>
-				<div class="buttons">
-					<input type="submit" ng-click="add_purchase_info()" value="Add">
-				</div>
+				{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+					<div class="buttons">
+						<input type="submit" value="Save">
+					</div>
+				{% endif %}
 			</form>
 	</div>
 {% endblock content %}

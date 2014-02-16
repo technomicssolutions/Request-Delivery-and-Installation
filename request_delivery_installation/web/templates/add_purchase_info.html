@@ -2,7 +2,7 @@
 {% block title %}Add Purchase Info
 {% endblock title %}
 {% block controller %}
-  ng-controller="AddPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}')"   
+  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '')"   
 {% endblock controller %}
 {% block body_id %}add_purchase_info{% endblock %}"  
 	
