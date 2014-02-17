@@ -26,11 +26,13 @@
 					<label>Purchaser Sales Man</label>
 					<input type="text" name="purchaser_sales_man" ng-model="purchaser_sales_man">
 					<label>Brand</label>
-					<select ng-show="brands.length" ng-repeat="brand in brands" ng-model="brandname">
-						<option value="brand.brand_name">[[brand.brand_name]]</option>
-					</select>
-					<input ng-hide="other_brand_flag" type="button" value="Other">
-					<input ng-show="other_brand_flag" type="text" name="brand" ng-model="new_brand">
+					<div ng-show="brand_flag">
+						<select ng-show="brands.length" ng-model="brandname" ng-change="new_brand_name()">
+							<option value="brand.brand_name" ng-repeat="brand in brands">[[brand.brand_name]]</option>
+							<option value="others">Other</option>
+						</select>
+					</div>
+					<input ng-show="other_brand_flag" type="text" name="brand" ng-model="new_brand"><br>
 					<label>Model</label>
 					<input type="text" name="model" ng-model="model">
 					<label>Address</label>

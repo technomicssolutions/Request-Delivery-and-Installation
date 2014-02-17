@@ -79,8 +79,8 @@
 				<br>
 				<br>
 				<label>Installation Requested Date : </label>
-				{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
-					<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date|date:'Y-m-j'}}" placeholder="format: yyyy-mm-dd">
+				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+					<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" placeholder="format: yyyy-mm-dd">
 					<span> Format should be in ' yyyy-mm-dd '</span>
 				{% else %}
 					<span> {{purchase.installation_requested_date}} </span>
@@ -95,7 +95,7 @@
 				<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
 				<br>
 				<br>
-				{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
 					<div class="buttons">
 						<input type="submit" value="Save">
 					</div>

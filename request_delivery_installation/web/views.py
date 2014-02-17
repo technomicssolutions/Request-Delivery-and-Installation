@@ -16,10 +16,12 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         context = {}
         user = request.user
-        if user.userprofile_set.all()[0].user_type == 'vendors':
-            current_date = datetime.datetime.now()
-            last_two_months = current_date - datetime.timedelta(days=3*30)
-            purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months)
+        if user.userprofile_set.all():
+            if user.userprofile_set.all()[0].user_type == 'vendors':
+                brand = user.userprofile_set.all()[0].brand_name
+                current_date = datetime.datetime.now()
+                last_two_months = current_date - datetime.timedelta(days=3*30)
+                purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months, brand=brand)
         else:
             purchase_info = PurchaseInformation.objects.all()
         if purchase_info:
@@ -160,6 +162,20 @@ class AddPurchanseInfo(View):
             quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=post_dict['delivery_requested_date'])
             purchase_info.delivery_requested_date.add(quantity_delivery_date) 
             purchase_info.save()
+            year, month, day = purchase_info.date.split('-')
+            purchase_date = datetime.date(int(year), int(month), int(day))
+            for delivery_details in purchase_info.delivery_requested_date.all():
+                delivery_date = delivery_details.delivery_date
+                delivery_date_diff = (delivery_date - purchase_date).days
+            if delivery_date_diff < 3:
+                purchase_info.delivery_requested_express_delivery = 'Express delivery'
+                purchase_info.save()
+            year, month, day = purchase_info.installation_requested_date.split('-')
+            installation_requested_date = datetime.date(int(year), int(month), int(day))
+            installation_date_diff = (installation_requested_date - purchase_date).days
+            if delivery_date_diff < 3:
+                purchase_info.installation_requested_express_delivery = 'Express delivery'
+                purchase_info.save()
             response = simplejson.dumps({'result': 'success', 'message': 'Successfully added'})
         except Exception as ex:
             response = simplejson.dumps({'result': 'error', 'message': str(ex)})
@@ -183,6 +199,7 @@ class PurchaseInfoView(View):
     def get(self, request, *args, **kwargs):
 
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
+        purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
         context = {
             'purchase': purchase_info,
         }
@@ -194,23 +211,39 @@ class PurchaseInfoView(View):
 
             quantity = ''
             delivery_date = ''
+
+            purchase_date = purchase_info.date
             for purchase_detail in purchase_info.delivery_requested_date.all():
                 quantity = purchase_detail.quantity
                 delivery_date = purchase_detail.delivery_date
-            if delivery_date != post_dict['delivery_requested_date']:
+            year, month, day = post_dict['delivery_requested_date'].split('-')
+            new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
+            print type(new_delivery_requested_date)
+            if delivery_date != new_delivery_requested_date:
                 quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
-                purchase_info.delivery_requested_express_delivery = 'Changed the delivery requested date for quantities : ',quantity,', from date : ',\
-                 delivery_date, ', to date : ', post_dict['delivery_requested_date']
+                
+                year, month, day = quantity_delivery_date.delivery_date.split('-')
+                delivery_date = datetime.date(int(year), int(month), int(day))
+                delivery_date_diff = (delivery_date - purchase_date).days
+                if delivery_date_diff < 3:
+                    purchase_info.delivery_requested_express_delivery = 'Express delivery'
+                    purchase_info.save()
                 purchase_info.delivery_requested_date.clear()
                 purchase_info.delivery_requested_date_change = purchase_info.delivery_requested_date_change + 1
                 purchase_info.delivery_requested_date.add(quantity_delivery_date) 
                 purchase_info.save()
             if purchase_info.installation_requested_date != post_dict['installation_requested_date']:
-                purchase_info.installation_requested_express_delivery = 'Changed the Installation request date from date : ',\
-                 purchase_info.installation_requested_date, ', to date : ', post_dict['installation_requested_date']
                 purchase_info.installation_requested_date = post_dict['installation_requested_date']
-                purchase_info.save()            
-            context = {'result': 'success', 'message': 'Successfully Edited','purchase': purchase_info,}
+                purchase_info.save() 
+                year, month, day = purchase_info.installation_requested_date.split('-')    
+                installation_requested_date = datetime.date(int(year), int(month), int(day))
+                print type(installation_requested_date) 
+                installation_date_diff = (installation_requested_date - purchase_date).days
+                if delivery_date_diff < 3:
+                    purchase_info.installation_requested_express_delivery = 'Express delivery'
+                    purchase_info.save()   
+                purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j')   
+            context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
             print "except == ", str(ex)
             context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}

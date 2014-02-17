@@ -206,6 +206,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 {
 	$scope.error_flag = false;
 	$scope.other_brand_flag = false;
+	$scope.brand_flag = true;
 	$scope.brand_val = '';
 	$scope.init = function(csrf_token, user_id, purchase_id)
     {
@@ -225,6 +226,12 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
         {
             console.log(data || "Request failed");
         });  
+    }
+    $scope.new_brand_name = function(){
+    	if ($scope.brandname == 'others') {
+    		$scope.other_brand_flag = true;
+			$scope.brand_flag = false;
+    	}
     }
     $scope.is_purchase_form_valid = function(){
     	if($scope.date == undefined || $scope.date == '') {
