@@ -77,8 +77,8 @@ function register_form_validation($scope) {
         $scope.error_message = 'Please Enter Email Id';
         $scope.error_flag = true;
         return false;
-    } else if($scope.user_type == undefined || $scope.user_type == '') {
-        $scope.error_message = 'Please Enter User Type';
+    } else if($scope.user_type == undefined || $scope.user_type == '' || $scope.user_type == 'select') {
+        $scope.error_message = 'Please Choose User Type';
         $scope.error_flag = true;
         return false;
     } else if($scope.user_type == 'vendors') {
@@ -96,7 +96,8 @@ function SignupController($scope, $element, $http, $timeout, $location)
 	$scope.is_vendor = false;
 	$scope.init = function(csrf_token)
     {
-        $scope.csrf_token = csrf_token;     
+        $scope.csrf_token = csrf_token; 
+        $scope.user_type = 'select';    
     }
     $scope.is_user_type_vendor = function(){
     	if ($scope.user_type == 'vendors') {
@@ -157,6 +158,7 @@ function AddSubDealerController($scope, $element, $http, $timeout, $location)
     {
         $scope.csrf_token = csrf_token;  
         $scope.user_id = user_id;
+        $scope.user_type = 'select';
     }
     $scope.add_subdealer = function (){
     	$scope.is_valid = register_form_validation($scope);
@@ -226,6 +228,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
         {
             console.log(data || "Request failed");
         });  
+        $scope.brandname = 'select';
     }
     $scope.new_brand_name = function(){
     	if ($scope.brandname == 'others') {
@@ -259,7 +262,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_flag = true;
 	        return false;
 	    }
-	    else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?') && ($scope.new_brand == undefined || $scope.new_brand == '')) {
+	    else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?') || ($scope.brandname == 'select')&& ($scope.new_brand == undefined || $scope.new_brand == '')) {
     		$scope.error_message = 'Please Choose or Add Brand Name';
 	        $scope.error_flag = true;
 	        return false;

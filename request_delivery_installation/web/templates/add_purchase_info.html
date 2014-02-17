@@ -27,7 +27,8 @@
 					<input type="text" name="purchaser_sales_man" ng-model="purchaser_sales_man">
 					<label>Brand</label>
 					<div ng-show="brand_flag">
-						<select ng-show="brands.length" ng-model="brandname" ng-change="new_brand_name()">
+						<select id="brand_options"ng-show="brands.length" ng-model="brandname" ng-change="new_brand_name()">
+							<option value="select">Select</option>
 							<option value="brand.brand_name" ng-repeat="brand in brands">[[brand.brand_name]]</option>
 							<option value="others">Other</option>
 						</select>

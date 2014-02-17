@@ -8,8 +8,9 @@
 
 {% block content %}
 
-	<div class="main_container">
+	<div class="contents">
 		<div class="signup_form">
+			<h2>Sign Up</h2>
 			<form name="sognup_content">{% csrf_token %}
 				<label>First Name</label>
 				<input type="text" name="firstname" ng-model="firstname">

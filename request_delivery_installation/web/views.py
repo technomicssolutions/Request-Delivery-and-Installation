@@ -22,8 +22,7 @@ class Home(View):
                 current_date = datetime.datetime.now()
                 last_two_months = current_date - datetime.timedelta(days=3*30)
                 purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months, brand=brand)
-        else:
-            purchase_info = PurchaseInformation.objects.all()
+        purchase_info = PurchaseInformation.objects.all()
         if purchase_info:
             context = {
                 'purchases': purchase_info,

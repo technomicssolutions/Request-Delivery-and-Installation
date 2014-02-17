@@ -109,3 +109,6 @@ textarea {
 #view_purchase_info .form_content label {
     font-weight: bold;
 }
+#brand_options {
+    width: 235px;
+}
