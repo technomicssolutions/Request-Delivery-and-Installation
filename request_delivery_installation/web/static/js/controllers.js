@@ -162,7 +162,6 @@ function AddSubDealerController($scope, $element, $http, $timeout, $location)
     }
     $scope.add_subdealer = function (){
     	$scope.is_valid = register_form_validation($scope);
-    	console.log($scope.is_valid);
     	if($scope.is_valid) {
 		    params = {
 		    	'firstname': $scope.firstname,
@@ -209,7 +208,16 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	$scope.error_flag = false;
 	$scope.other_brand_flag = false;
 	$scope.brand_flag = true;
+	$scope.other_purchase_sales_man_flag = false;
+	$scope.purchase_sales_man_flag = true;
+	$scope.dealer_flag = true;
+	$scope.other_dealer_flag = false;
 	$scope.brand_val = '';
+	$scope.purchaser_sales_man = '';
+	$scope.dealer_purchase_in_charge = '';
+	$scope.date = '';
+	$scope.delivery_requested_date = ''; 
+	$scope.installation_requested_date = '';
 	$scope.init = function(csrf_token, user_id, purchase_id)
     {
         $scope.csrf_token = csrf_token;  
@@ -217,8 +225,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
         $scope.purchase_id = purchase_id;
         $http.get('/fetch_brand_names/').success(function(data)
         {
-            $scope.brands = data.brands;
             if ( data.brands.length > 0) {
+            	$scope.brands = data.brands;
             	$scope.other_brand_flag = false;
             } else {
             	$scope.other_brand_flag = true;
@@ -229,14 +237,61 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
             console.log(data || "Request failed");
         });  
         $scope.brandname = 'select';
+
+        $http.get('/fetch_purchase_sales_men/').success(function(data)
+        {
+            if ( data.purchase_sales_men.length > 0) {
+            	$scope.purchase_sales_men = data.purchase_sales_men;
+            	$scope.other_purchase_sales_man_flag = false;
+            } else {
+            	$scope.other_purchase_sales_man_flag = true;
+            }
+
+        }).error(function(data, status)
+        {
+            console.log(data || "Request failed");
+        });  
+        $scope.existing_purchase_sales_man = 'select';
+
+        $http.get('/fetch_dealers/').success(function(data)
+        {
+            if ( data.dealers.length > 0) {
+            	$scope.dealers = data.dealers;
+            	$scope.other_dealer_flag = false;
+            } else {
+            	$scope.other_dealer_flag = true;
+            }
+
+        }).error(function(data, status)
+        {
+            console.log(data || "Request failed");
+        });  
+        $scope.dealers_name = 'select';
     }
-    $scope.new_brand_name = function(){
+
+    $scope.add_new_brand_name = function(){
     	if ($scope.brandname == 'others') {
     		$scope.other_brand_flag = true;
 			$scope.brand_flag = false;
     	}
     }
+    $scope.add_new_purchase_sales_man = function() {
+    	if ($scope.existing_purchase_sales_man == 'others') {
+    		$scope.other_purchase_sales_man_flag = true;
+			$scope.purchase_sales_man_flag = false;
+    	}
+    }
+    $scope.add_new_dealer = function() {
+    	if ($scope.dealers_name == 'others') {
+    		$scope.other_dealer_flag = true;
+			$scope.dealer_flag = false;
+    	}
+    }
     $scope.is_purchase_form_valid = function(){
+    	$scope.date = $('#datepicker').val();
+    	$scope.delivery_requested_date = $('#delivery_date').val();
+		$scope.installation_requested_date = $('#installation_date').val();
+		alert($scope.dealers_name, $scope.new_dealer);
     	if($scope.date == undefined || $scope.date == '') {
 	        $scope.error_message = 'Please Enter Date';
 	        $scope.error_flag = true;
@@ -253,16 +308,15 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_message = 'Please Enter Dealer Name';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.dealer_purchase_in_charge == undefined || $scope.dealer_purchase_in_charge == '') {
-	        $scope.error_message = 'Please Enter Dealer Purchase in Charge';
+	    } else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || ($scope.dealers_name == 'select')) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
+	        $scope.error_message = 'Please Choose or Add Dealer Purchase in Charge';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.purchaser_sales_man == undefined || $scope.purchaser_sales_man == '') {
-	        $scope.error_message = 'Please Enter Dealer Purchaseer Sales Man';
+	    } else if(($scope.existing_purchase_sales_man == undefined || $scope.existing_purchase_sales_man == '' || $scope.existing_purchase_sales_man == '? undefined:undefined ?' || $scope.existing_purchase_sales_man == 'select') || (($scope.existing_purchase_sales_man == 'others') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) {
+	        $scope.error_message = 'Please Choose or Add Purchaser Sales Man';
 	        $scope.error_flag = true;
 	        return false;
-	    }
-	    else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?') || ($scope.brandname == 'select')&& ($scope.new_brand == undefined || $scope.new_brand == '')) {
+	    } else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?' || $scope.brandname == 'select') || (($scope.brandname == 'others')&& ($scope.new_brand == undefined || $scope.new_brand == ''))) {
     		$scope.error_message = 'Please Choose or Add Brand Name';
 	        $scope.error_flag = true;
 	        return false;
@@ -271,19 +325,47 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Model';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.address == undefined || $scope.address == '' ) {
-	        $scope.error_message = 'Please Enter Address';
-	        $scope.error_flag = true;
-	        return false;
 	    } else if($scope.contact_person == undefined || $scope.contact_person == '' ) {
 	        $scope.error_message = 'Please Enter Contact Person';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.contact_no == undefined || $scope.contact_no == '' ) {
-	        $scope.error_message = 'Please Enter Contact No';
+	    } else if($scope.block_house_no == undefined || $scope.block_house_no == '' ) {
+	        $scope.error_message = 'Please Enter Block or House No';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.quantity == undefined || $scope.quantity == '' ) {
+	    } else if($scope.floor_no == undefined || $scope.floor_no == '' ) {
+	        $scope.error_message = 'Please Enter Floor No';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if ($scope.unit_no == undefined || $scope.unit_no == '') {
+	    	$scope.error_message = 'Please Enter Unit No';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if ($scope.building_name == undefined || $scope.building_name == '') {
+	    	$scope.error_message = 'Please Enter Building Name';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if ($scope.street_name == undefined || $scope.street_name == '') {
+	    	$scope.error_message = 'Please Enter Street Name';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if ($scope.postal_code == undefined || $scope.postal_code == '') {
+	    	$scope.error_message = 'Please Enter Postal Code';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if (validateEmail($scope.email)) {
+	    	$scope.error_message = 'Please Enter Email';
+	        $scope.error_flag( = true;
+	        return false;
+	    } else if ($scope.telephone_no == undefined || $scope.telephone_no == '') {
+	    	$scope.error_message = 'Please Enter Telephone Number';
+	        $scope.error_flag = true;
+	        return false;
+        } else if ($scope.mobile_no == undefined || $scope.mobile_no == '') {
+	    	$scope.error_message = 'Please Enter Mobile Number';
+	        $scope.error_flag = true;
+	        return false;
+        } else if($scope.quantity == undefined || $scope.quantity == '' ) {
 	        $scope.error_message = 'Please Enter Quantity';
 	        $scope.error_flag = true;
 	        return false;
@@ -310,9 +392,13 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	$scope.is_valid = $scope.is_purchase_form_valid();
     	if ($scope.is_valid) {
     		if ($scope.brandname) {
-		    	$scope.brand_val = $scope.brandname;
-		    } else {
 		    	$scope.brand_val = $scope.new_brand;
+		    }
+		    if ($scope.existing_purchase_sales_man) {
+		    	$scope.purchaser_sales_man = $scope.new_purchase_sales_man;
+		    }
+		    if ($scope.dealers_name == 'others') {
+		    	$scope.dealer_purchase_in_charge = $scope.new_dealer;
 		    }
     		params = {
 		    	'date': $scope.date,
@@ -323,9 +409,16 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        'purchaser_sales_man': $scope.purchaser_sales_man,
 		        'brand':$scope.brand_val,
 		        'model':$scope.model,
-		        'address':$scope.address,
 		        'contact_person':$scope.contact_person,
-		        'contact_no':$scope.contact_no,
+		        'block_house_no': $scope.block_house_no,
+		        'floor_no': $scope.floor_no,
+		        'unit_no': $scope.unit_no,
+		        'building_name': $scope.building_name,
+		        'street_name': $scope.street_name,
+		        'postal_code': $scope.postal_code,
+		        'email': $scope.email,
+		        'telephone_no': $scope.telephone_no,
+		        'mobile_no': $scope.mobile_no,
 		        'quantity':$scope.quantity,
 		        'delivery_requested_date':$scope.delivery_requested_date,
 		        'installation_requested_date':$scope.installation_requested_date,
@@ -356,6 +449,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	}
     }
     $scope.edit_purchase_info = function(){
+
     	params = {
 	    	'delivery_requested_date':$scope.delivery_requested_date,
 	        'installation_requested_date':$scope.installation_requested_date,

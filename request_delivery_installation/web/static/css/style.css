@@ -112,3 +112,34 @@ textarea {
 #brand_options {
     width: 235px;
 }
+.sub_contents {
+    width: 235px;
+    height: auto;
+}
+.sub_contents input[type='text'], textarea, select{
+    width: 98%;
+}
+.login_form_contents {
+    width: 235px;
+    height: auto;
+    margin: auto;
+}
+.login_form_contents input[type='text'] , select{
+    width: 98%;
+}
+.error_message {
+    color: #ff0000;
+}
+#password {
+    width: 98%;
+}
+#view_purchase_info .sub_contents {
+    width: 330px;
+    height: auto;
+    margin: auto;
+    margin-bottom: 15px;
+
+}
+#view_purchase_info .sub_contents input[type='text'], input[type="password"]{
+    width: 28%;
+}

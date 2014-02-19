@@ -81,7 +81,7 @@ class Signup(View):
         try:
             post_dict = request.POST
             user = User.objects.create(first_name=post_dict['firstname'], last_name=post_dict['lastname'],
-            email=post_dict['email'], username=post_dict['email'])
+            email=post_dict['email'], username=post_dict['username'])
             user.set_password(post_dict['password'])
             user.save()
             userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'] )
@@ -154,9 +154,16 @@ class AddPurchanseInfo(View):
             purchase_info.purchaser_sales_man = post_dict['purchaser_sales_man']
             purchase_info.brand = post_dict['brand']
             purchase_info.model = post_dict['model']
-            purchase_info.address = post_dict['address'] 
             purchase_info.contact_person = post_dict['contact_person']
-            purchase_info.contact_number = post_dict['contact_no']
+            purchase_info.block_house_number = post_dict['block_house_no']
+            purchase_info.floor_number = post_dict['floor_no']
+            purchase_info.unit_number = post_dict['unit_no']
+            purchase_info.building_name = post_dict['building_name']
+            purchase_info.street_name = post_dict['street_name']
+            purchase_info.postal_code = post_dict['postal_code']
+            purchase_info.email = post_dict['email']
+            purchase_info.telephone_number = post_dict['telephone_no']
+            purchase_info.mobile_number = post_dict['mobile_no']
             purchase_info.installation_requested_date = post_dict['installation_requested_date']
             purchase_info.extra_man_power_request = post_dict['extra_man_power']
             purchase_info.remarks = post_dict['remarks']
@@ -188,11 +195,38 @@ class FetchBrandNames(View):
     def get(self, request, *args, **kwargs):
         ctx_brands = []
         brands =  PurchaseInformation.objects.all().values_list('brand', flat = True).distinct()
-        for brand in brands:
-            ctx_brands.append({
-               'brand_name': brand
-            })
+        if brands.count() > 0:
+            for brand in brands:
+                ctx_brands.append({
+                   'brand_name': brand
+                })
         response = simplejson.dumps({'result': 'sucess', 'brands': ctx_brands})
+        status_code = 200
+        return HttpResponse(response, status = status_code, mimetype = 'application/json')
+
+class FetchPurchaseSalesManList(View):
+    def get(self, request, *args, **kwargs):
+        ctx_purchaser_sales_men = []
+        purchaser_sales_men =  PurchaseInformation.objects.all().values_list('purchaser_sales_man', flat = True).distinct()
+        if purchaser_sales_men.count() > 0:
+            for purchaser_sales_man in purchaser_sales_men:
+                ctx_purchaser_sales_men.append({
+                   'name': purchaser_sales_man
+                })
+        response = simplejson.dumps({'result': 'sucess', 'purchase_sales_men': ctx_purchaser_sales_men})
+        status_code = 200
+        return HttpResponse(response, status = status_code, mimetype = 'application/json')
+
+class FetchDealersList(View):
+    def get(self, request, *args, **kwargs):
+        ctx_dealers = []
+        dealers =  PurchaseInformation.objects.all().values_list('dealer_purchase_in_charge', flat = True).distinct()
+        if dealers.count() > 0:
+            for dealer in dealers:
+                ctx_dealers.append({
+                   'name': dealer
+                })
+        response = simplejson.dumps({'result': 'sucess', 'dealers': ctx_dealers})
         status_code = 200
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 

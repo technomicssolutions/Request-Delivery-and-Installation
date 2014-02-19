@@ -4,16 +4,40 @@
 	<head>
 		<title>{% block title %}{% endblock title%} | Request Delivery and Installation </title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- Calendar css -->
+		<link rel="stylesheet" href="/static/css/calendar/jquery.ui.all.css">
+		<link href="/static/css/style.css" rel="stylesheet" >	
+
+
 		<script src="/static/js/lib/jquery-1.9.1.js"></script>
-    
 		<script src="/static/js/lib/angular/angular.js"></script>
 	    <script src="/static/js/lib/angular/angular-resource.js"></script>
 	  	<script src="/static/js/app.js"></script>
 	    <script src="/static/js/services.js"></script>
 	  	<script src="/static/js/controllers.js"></script>
-	  	<script src="/static/js/directives.js"></script>  	
-
-		<link href="/static/css/style.css" rel="stylesheet" >		
+	  	<script src="/static/js/directives.js"></script>
+	  	<!-- Date picker scripts  -->
+	  	<script src="/static/js/calendar/jquery.ui.core.js"></script>
+		<script src="/static/js/calendar/jquery.ui.widget.js"></script>
+		<script src="/static/js/calendar/jquery.ui.datepicker.js"></script>
+	  	<script>
+			$(function() {
+				$( "#datepicker" ).datepicker({
+					dateFormat: "yy-mm-d"
+				});
+			});
+			$(function() {
+				$( "#delivery_date" ).datepicker({
+					dateFormat: "yy-mm-d"
+				});
+			});
+			$(function() {
+				$( "#installation_date" ).datepicker({
+					dateFormat: "yy-mm-d"
+				});
+			});
+		</script>  		
 
 		{% block extrahead %}
 		{% endblock extrahead %}

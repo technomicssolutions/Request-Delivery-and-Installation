@@ -12,31 +12,48 @@
 		<div class="signup_form">
 			<h2>Sign Up</h2>
 			<form name="sognup_content">{% csrf_token %}
-				<label>First Name</label>
-				<input type="text" name="firstname" ng-model="firstname">
-				<label>Last Name</label>
-				<input type="text" name="lastname" ng-model="lastname">
-				<label>Username</label>
-				<input type="text" name="username" ng-model="username">
-				<label>Password</label>
-				<input type="password" name="password" ng-model="password">
-				<label>Email ID</label>
-				<input type="text" name="email" ng-model="email">
-				<label>User Type</label>
-				<select ng-model="user_type" ng-change="is_user_type_vendor()">
-					<option value="select">Select</option>
-					<option value="customer/dealer">Customer/Dealer</option>
-					<option value="sales_executive">Sales Executive</option>
-					<option value="internal_technician">Internal Technician</option>
-					<option value="vendors">Vendors</option>
-				</select>
-				<div ng-show="is_vendor">
-					<label>Brand</label>
-					<input type="text" name="brand" ng-model="brand">
+				<div class="sub_contents">
+					<label>First Name</label><br>
+					<input type="text" name="firstname" ng-model="firstname"><br>
 				</div>
-				<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
-				<div class="buttons">
-					<input type="submit" ng-click="signup()" value="Signup">
+				<div class="sub_contents">
+					<label>Last Name</label><br>
+					<input type="text" name="lastname" ng-model="lastname"><br>
+				</div>
+				<div class="sub_contents">
+					<label>Username</label><br>
+					<input type="text" name="username" ng-model="username"><br>
+				</div>
+				<div class="sub_contents">
+					<label>Password</label><br>
+					<input type="password" name="password" id="password" ng-model="password"><br>
+				</div>
+				<div class="sub_contents">
+					<label>Email ID</label><br>
+					<input type="text" name="email" ng-model="email"><br>
+				</div>
+				<div class="sub_contents">
+					<label>User Type</label><br>
+					<select ng-model="user_type" ng-change="is_user_type_vendor()">
+						<option value="select">Select</option>
+						<option value="customer/dealer">Customer/Dealer</option>
+						<option value="sales_executive">Sales Executive</option>
+						<option value="internal_technician">Internal Technician</option>
+						<option value="vendors">Vendors</option>
+					</select><br>
+				</div>
+				<div class="sub_contents">
+					<div ng-show="is_vendor">
+						<label>Brand</label>
+						<input type="text" name="brand" ng-model="brand">
+					</div>
+				</div>
+				<p ng-show="error_flag" class="error_msg">[[error_message]]</p><br>
+				<div class="sub_contents">
+					<div class="buttons">
+						<input type="submit" ng-click="signup()" value="Signup">
+						<a href="{% url 'login' %}">Login</a>
+					</div>
 				</div>
 			</form>
 		</div>

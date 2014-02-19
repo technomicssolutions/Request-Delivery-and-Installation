@@ -13,91 +13,117 @@
 		<div class="form_content">
 			<h2>Puchase No : {{purchase.slno}}</h2>
 			<form name="add_subdealer_content" method="post" action="{% url 'purchase_info' purchase_info_id=purchase.id %}">{% csrf_token %}
-				<label>Created By : </label>
-				<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
-				<br>
-				<br>
-				<label>Date : </label>
-				<span>{{purchase.date}}</span>
-				<br>
-				<br>
-				<label>Dealer PO Number : </label>
-				<span>{{purchase.dealer_po_number}}</span>
-				<br>
-				<br>
-				<label>Invoice Number : </label>
-				<span>{{purchase.invoice_no}}</span>
-				<br>
-				<br>
-				<label>Dealer Name : </label>
-				<span>{{purchase.dealer_name}}</span>
-				<br>
-				<br>
-				<label>Dealer Purchase in Charge : </label>
-				<span>{{purchase.dealer_purchase_in_charge}}</span>
-				<br>
-				<br>
-				<label>Purchaser Sales Man : </label>
-				<span>{{purchase.purchaser_sales_man}}</span>
-				<br>
-				<br>
-				<label>Brand : </label>
-				<span>{{purchase.brand}}</span>
-				<br>
-				<br>
-				<label>Model : </label>
-				<span>{{purchase.model}}</span>
-				<br>
-				<br>
-				<label>Address : </label>
-				<span name="address" readonly>{{purchase.address}}</span>
-				<br>
-				<br>
-				<label>Contact Person : </label>
-				<span>{{purchase.contact_person}}</span>
-				<br>
-				<br>
-				<label>Contact Number : </label>
-				<span>{{purchase.contact_number}}</span>
-				<br>
-				<br>
+				<div class="sub_contents">
+					<label>Created By : </label>
+					<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Date : </label>
+					<span>{{purchase.date}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Dealer PO Number : </label>
+					<span>{{purchase.dealer_po_number}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Invoice Number : </label>
+					<span>{{purchase.invoice_no}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Dealer Name : </label>
+					<span>{{purchase.dealer_name}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Dealer Purchase in Charge : </label>
+					<span>{{purchase.dealer_purchase_in_charge}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Purchaser Sales Man : </label>
+					<span>{{purchase.purchaser_sales_man}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Brand : </label>
+					<span>{{purchase.brand}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Model : </label>
+					<span>{{purchase.model}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Contact Person : </label>
+					<span>{{purchase.contact_person}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Block/House Number: </label>
+					<span name="address" readonly>{{purchase.block_house_number}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Floor Number : </label>
+					<span>{{purchase.floor_number}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Unit Number: </label>
+					<span name="address" readonly>{{purchase.unit_number}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Building Name: </label>
+					<span name="address" readonly>{{purchase.building_name}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Street Name: </label>
+					<span name="address" readonly>{{purchase.street_name}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Postal Code: </label>
+					<span name="address" readonly>{{purchase.postal_code}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Email: </label>
+					<span name="address" readonly>{{purchase.email}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Telephone Number: </label>
+					<span name="address" readonly>{{purchase.telephone_number}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Mobile Number: </label>
+					<span name="address" readonly>{{purchase.mobile_number}}</span>
+				</div>
 				{% for delivery_details in purchase.delivery_requested_date.all%}
-				
-					<label>Quantity : </label>
-					<span>{{delivery_details.quantity}}</span>
-					<br>
-					<br>
-					<label>Delivery Requested Date : </label>
-					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
-						<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" placeholder="format: yyyy-mm-dd">
-						<span>Format should be in ' yyyy-mm-dd '</span>
-					{% else %}
-						<span> {{delivery_details.delivery_date}} </span>
-					{% endif %}
-				
+					<div class="sub_contents">
+						<label>Quantity : </label>
+						<span>{{delivery_details.quantity}}</span>
+					</div>
+					<div class="sub_contents">
+						<label>Delivery Requested Date : </label>
+						{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+							<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" id="delivery_date" ><br>
+						{% else %}
+							<span> {{delivery_details.delivery_date}} </span>
+						{% endif %}
+					</div>
 				{% endfor %}
-				<br>
-				<br>
-				<label>Installation Requested Date : </label>
+				<div class="sub_contents">
+					<label>Installation Requested Date : </label>
+					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
+						<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
+					{% else %}
+						<span> {{purchase.installation_requested_date}} </span>
+					{% endif %}
+				</div>
+				<div class="sub_contents">
+					<label>Extra Man Power : </label>
+					<span>{{purchase.extra_man_power_request}}</span>
+				</div>
+				<div class="sub_contents">
+					<label>Remarks : </label>
+					<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
+				</div>
 				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
-					<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" placeholder="format: yyyy-mm-dd">
-					<span> Format should be in ' yyyy-mm-dd '</span>
-				{% else %}
-					<span> {{purchase.installation_requested_date}} </span>
-				{% endif %}
-				<br>
-				<br>
-				<label>Extra Man Power : </label>
-				<span>{{purchase.extra_man_power_request}}</span>
-				<br>
-				<br>
-				<label>Remarks : </label>
-				<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
-				<br>
-				<br>
-				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser or user.userprofile_set.all.0.user_type == 'vendors' %}
-					<div class="buttons">
-						<input type="submit" value="Save">
+					<div class="sub_contents">
+						<div class="buttons">
+							<input type="submit" value="Save">
+						</div>
 					</div>
 				{% endif %}
 			</form>

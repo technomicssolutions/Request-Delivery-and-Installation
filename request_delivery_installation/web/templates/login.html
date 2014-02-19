@@ -11,15 +11,23 @@
 	<div class="main_container">
 		<div class="login_form">
 			<form name="login_content">{% csrf_token %}
-				<label>Username</label>
-				<input type="text" name="username" ng-model="username">
-				<label>Password</label>
-				<input type="password" name="password" ng-model="password">
-				<div class="buttons">
-					<input type="submit" ng-click="login()" value="Login">
-					<a href="{% url 'register' %}">Register</a>
+				<div class="login_form_contents">
+					<label>Username</label><br>
+					<input type="text" name="username" ng-model="username"><br>
 				</div>
-				<p ng-show="error_flag">[[error_message]]</p>
+				<div class="login_form_contents">
+					<label>Password</label><br>
+					<input type="password" name="password" id="password" ng-model="password"><br>
+				</div>
+				<div class="login_form_contents">
+					<div class="buttons">
+						<input type="submit" ng-click="login()" value="Login">
+						<a href="{% url 'register' %}">Register</a>
+					</div>
+				</div>
+				<div class="login_form_contents">
+					<p ng-show="error_flag" class="error_message">[[error_message]]</p>
+				</div>
 			</form>
 		</div>
 	</div>

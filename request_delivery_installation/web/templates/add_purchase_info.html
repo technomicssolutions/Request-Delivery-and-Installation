@@ -13,45 +13,122 @@
 			<h1>Add SubDealer</h1>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
-					<label>Date</label>
-					<input type="text" name="date" ng-model="date" placeholder="format: yyyy-mm-dd">
-					<label>Dealer PO Number</label>
-					<input type="text" name="dealer_po_number" ng-model="dealer_po_number">
-					<label>Invoice Number</label>
-					<input type="text" name="invoice_no" ng-model="invoice_no">
-					<label>Dealer Name</label>
-					<input type="text" name="dealer_name" ng-model="dealer_name">
-					<label>Dealer Purchase in Charge</label>
-					<input type="text" name="dealer_purchase_in_charge" ng-model="dealer_purchase_in_charge">
-					<label>Purchaser Sales Man</label>
-					<input type="text" name="purchaser_sales_man" ng-model="purchaser_sales_man">
-					<label>Brand</label>
-					<div ng-show="brand_flag">
-						<select id="brand_options"ng-show="brands.length" ng-model="brandname" ng-change="new_brand_name()">
-							<option value="select">Select</option>
-							<option value="brand.brand_name" ng-repeat="brand in brands">[[brand.brand_name]]</option>
-							<option value="others">Other</option>
-						</select>
+					<div class="sub_contents">
+						<label>Date</label>
+						<input type="text" id="datepicker" name="date" ng-model="date">
 					</div>
-					<input ng-show="other_brand_flag" type="text" name="brand" ng-model="new_brand"><br>
-					<label>Model</label>
-					<input type="text" name="model" ng-model="model">
-					<label>Address</label>
-					<textarea name="address" ng-model="address"></textarea>
-					<label>Contact Person</label>
-					<input type="text" name="contact_person" ng-model="contact_person">
-					<label>Contact Number</label>
-					<input type="text" name="contact_no" ng-model="contact_no">
-					<label>Quantity</label>
-					<input type="text" name="quantity" ng-model="quantity">
-					<label>Delivery Requested Date</label>
-					<input type="text" name="delivery_requested_date" ng-model="delivery_requested_date" placeholder="format: yyyy-mm-dd">
-					<label>Installation Requested Date</label>
-					<input type="text" name="installation_requested_date" ng-model="installation_requested_date" placeholder="format: yyyy-mm-dd">
-					<label>Extra Man Power</label>
-					<input type="text" name="extra_man_power" ng-model="extra_man_power">
-					<label>Remarks</label>
-					<textarea type="text" name="remarks" ng-model="remarks"></textarea>
+					<div class="sub_contents">
+						<label>Dealer PO Number</label>
+						<input type="text" name="dealer_po_number" ng-model="dealer_po_number">
+					</div>
+					<div class="sub_contents">
+						<label>Invoice Number</label>
+						<input type="text" name="invoice_no" ng-model="invoice_no">
+					</div>
+					<div class="sub_contents">
+						<label>Dealer Name</label>
+						<input type="text" name="dealer_name" ng-model="dealer_name">
+					</div>
+					<div class="sub_contents">
+						<label>Dealer Purchase in Charge</label>
+						<div ng-show="dealer_flag">
+							<select id="brand_options" ng-show="dealers.length" ng-model="dealers_name" ng-change="add_new_dealer()">
+								<option value="select">Select</option>
+								<option value="dealer.name" ng-repeat="dealer in dealers">[[dealer.name]]</option>
+								<option value="others">Other</option>
+							</select>
+						</div>
+						<input ng-show="other_dealer_flag" type="text" name="new_dealer" ng-model="new_dealer">
+						<!-- <input type="text" name="dealer_purchase_in_charge" ng-model="dealer_purchase_in_charge"><br> -->
+					</div>
+					<div class="sub_contents">
+						<label>Purchaser Sales Man</label>
+						<div ng-show="purchase_sales_man_flag">
+							<select id="brand_options" ng-show="purchase_sales_men.length" ng-model="existing_purchase_sales_man" ng-change="add_new_purchase_sales_man()">
+								<option value="select">Select</option>
+								<option value="purchase_sales_man.name" ng-repeat="purchase_sales_man in purchase_sales_men">[[purchase_sales_man.name]]</option>
+								<option value="others">Other</option>
+							</select>
+						</div>
+						<input ng-show="other_purchase_sales_man_flag" type="text" name="new_purchase_sales_man" ng-model="new_purchase_sales_man">
+						<!-- <input type="text" name="purchaser_sales_man" ng-model="purchaser_sales_man"><br> -->
+					</div>
+					<div class="sub_contents">
+						<label>Brand</label>
+						<div ng-show="brand_flag">
+							<select id="brand_options"ng-show="brands.length" ng-model="brandname" ng-change="add_new_brand_name()">
+								<option value="select">Select</option>
+								<option value="brand.brand_name" ng-repeat="brand in brands">[[brand.brand_name]]</option>
+								<option value="others">Other</option>
+							</select>
+						</div>
+						<input ng-show="other_brand_flag" type="text" name="brand" ng-model="new_brand">
+					</div>
+					<div class="sub_contents">
+						<label>Model</label>
+						<input type="text" name="model" ng-model="model">
+					</div>
+					
+					<div class="sub_contents">
+						<label>Contact Person</label>
+						<input type="text" name="contact_person" ng-model="contact_person">
+					</div>
+					<div class="sub_contents">
+						<label>Block/House Number</label>
+						<input type="text" name="block_house_no" ng-model="block_house_no">
+					</div>
+					<div class="sub_contents">
+						<label>Floor Number</label>
+						<input type="text" name="floor_no" ng-model="floor_no">
+					</div>
+					<div class="sub_contents">
+						<label>Unit Number</label>
+						<input type="text" name="unit_no" ng-model="unit_no">
+					</div>
+					<div class="sub_contents">
+						<label>Building Name</label>
+						<input type="text" name="building_name" ng-model="building_name">
+					</div>
+					<div class="sub_contents">
+						<label>Street Name</label>
+						<input type="text" name="street_name" ng-model="street_name">
+					</div>
+					<div class="sub_contents">
+						<label>Postal Code</label>
+						<input type="text" name="postal_code" ng-model="postal_code">
+					</div>
+					<div class="sub_contents">
+						<label>Email </label>
+						<input type="text" name="email" ng-model="email">
+					</div>
+					<div class="sub_contents">
+						<label>Telephone Number </label>
+						<input type="text" name="telephone_no" ng-model="telephone_no">
+					</div>
+					<div class="sub_contents">
+						<label>Mobile Number</label>
+						<input type="text" name="mobile_no" ng-model="mobile_no">
+					</div>
+					<div class="sub_contents">
+						<label>Quantity</label>
+						<input type="text" name="quantity" ng-model="quantity">
+					</div>
+					<div class="sub_contents">
+						<label>Delivery Requested Date</label>
+						<input type="text" id="delivery_date" name="delivery_requested_date" ng-model="delivery_requested_date">
+					</div>
+					<div class="sub_contents">
+						<label>Installation Requested Date</label>
+						<input type="text" name="installation_requested_date" id="installation_date" ng-model="installation_requested_date">
+					</div>
+					<div class="sub_contents">
+						<label>Extra Man Power</label>
+						<input type="text" name="extra_man_power" ng-model="extra_man_power">
+					</div>
+					<div class="sub_contents">
+						<label>Remarks</label>
+						<textarea id="text_area" type="text" name="remarks" ng-model="remarks"></textarea>
+					</div>
 					<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
 					<div class="buttons">
 						<input type="submit" ng-click="add_purchase_info()" value="Add">
