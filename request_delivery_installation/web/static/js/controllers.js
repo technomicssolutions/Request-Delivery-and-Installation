@@ -355,7 +355,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        return false;
 	    } else if (validateEmail($scope.email)) {
 	    	$scope.error_message = 'Please Enter Email';
-	        $scope.error_flag( = true;
+	        $scope.error_flag = true;
 	        return false;
 	    } else if ($scope.telephone_no == undefined || $scope.telephone_no == '') {
 	    	$scope.error_message = 'Please Enter Telephone Number';
