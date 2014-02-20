@@ -391,12 +391,18 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	if ($scope.is_valid) {
     		if ($scope.brandname == 'others' || $scope.brandname == 'select') {
 		    	$scope.brand_val = $scope.new_brand;
+		    } else {
+		    	$scope.brand_val = $scope.brandname;
 		    }
 		    if ($scope.existing_purchase_sales_man == 'others' || $scope.existing_purchase_sales_man == 'select') {
 		    	$scope.purchaser_sales_man = $scope.new_purchase_sales_man;
+		    } else {
+		    	$scope.purchaser_sales_man = $scope.existing_purchase_sales_man;
 		    }
 		    if ($scope.dealers_name == 'others' || $scope.dealers_name == 'select') {
 		    	$scope.dealer_purchase_in_charge = $scope.new_dealer;
+		    } else {
+		    	$scope.dealer_purchase_in_charge = $scope.dealers_name;
 		    }
     		params = {
 		    	'date': $scope.date,
