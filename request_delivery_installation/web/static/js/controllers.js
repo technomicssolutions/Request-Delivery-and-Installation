@@ -306,15 +306,15 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_message = 'Please Enter Dealer Name';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || ($scope.dealers_name == 'select')) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
+	    } else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || (($scope.dealers_name == 'select' ) && ($scope.new_dealer == undefined || $scope.new_dealer == ''))) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
 	        $scope.error_message = 'Please Choose or Add Dealer Purchase in Charge';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if(($scope.existing_purchase_sales_man == undefined || $scope.existing_purchase_sales_man == '' || $scope.existing_purchase_sales_man == '? undefined:undefined ?' || $scope.existing_purchase_sales_man == 'select') || (($scope.existing_purchase_sales_man == 'others') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) {
+	    } else if(($scope.existing_purchase_sales_man == undefined || $scope.existing_purchase_sales_man == '' || $scope.existing_purchase_sales_man == '? undefined:undefined ?' || (($scope.existing_purchase_sales_man == 'select') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) || (($scope.existing_purchase_sales_man == 'others') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) {
 	        $scope.error_message = 'Please Choose or Add Purchaser Sales Man';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?' || $scope.brandname == 'select') || (($scope.brandname == 'others')&& ($scope.new_brand == undefined || $scope.new_brand == ''))) {
+	    } else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?' || (($scope.brandname == 'select') && ($scope.new_brand == undefined || $scope.new_brand == ''))) || (($scope.brandname == 'others')&& ($scope.new_brand == undefined || $scope.new_brand == ''))) {
     		$scope.error_message = 'Please Choose or Add Brand Name';
 	        $scope.error_flag = true;
 	        return false;
@@ -351,7 +351,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Postal Code';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if (validateEmail($scope.email)) {
+	    } else if (!(validateEmail($scope.email))) {
 	    	$scope.error_message = 'Please Enter Email';
 	        $scope.error_flag = true;
 	        return false;
@@ -389,13 +389,13 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     $scope.add_purchase_info = function(){
     	$scope.is_valid = $scope.is_purchase_form_valid();
     	if ($scope.is_valid) {
-    		if ($scope.brandname) {
+    		if ($scope.brandname == 'others' || $scope.brandname == 'select') {
 		    	$scope.brand_val = $scope.new_brand;
 		    }
-		    if ($scope.existing_purchase_sales_man) {
+		    if ($scope.existing_purchase_sales_man == 'others' || $scope.existing_purchase_sales_man == 'select') {
 		    	$scope.purchaser_sales_man = $scope.new_purchase_sales_man;
 		    }
-		    if ($scope.dealers_name == 'others') {
+		    if ($scope.dealers_name == 'others' || $scope.dealers_name == 'select') {
 		    	$scope.dealer_purchase_in_charge = $scope.new_dealer;
 		    }
     		params = {
