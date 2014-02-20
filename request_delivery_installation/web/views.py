@@ -106,9 +106,9 @@ class AddSubDealer(View):
         context = {}
         user = User.objects.get(id = kwargs['user_id'])
         sub_dealers = SubDealers.objects.filter(userprofile = user.userprofile_set.all()[0]).count()
-        if sub_dealers > 20:
+        if sub_dealers >= 20:
             context = {
-                'message': 'You have already 20 subdealers',
+                'message': 'You have already Added 20 subdealers',
             }
 
         return render(request, 'add_subdealer.html', context)

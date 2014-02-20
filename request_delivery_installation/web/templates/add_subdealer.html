@@ -11,9 +11,12 @@
 		{% include 'header.html' %}
 		<div class="add_subdealer">
 			{% if  message %}
-				<span>{{ message }}</span>
-			{% endif %}
-			<h1>Add SubDealer</h1>
+				<div class="message">
+					<span class="box error_message">{{ message }}</span>
+				</div>
+				
+			{% else %}
+				<h1>Add SubDealer</h1>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
 					<div class="sub_contents">
@@ -53,6 +56,8 @@
 					</div>
 				</form>
 			</div>
+			{% endif %}
+			
 		</div>
 	</div>
 
