@@ -8,6 +8,7 @@ admin.autodiscover()
 from web.views import *
 
 urlpatterns = patterns('',
+    
     url(r'^$', login_required(Home.as_view()), name='home'),
     url(r'^accounts/login/$', Login.as_view(), name='login'),
     url(r'^logout/$', Logout.as_view(), name='logout'),
@@ -18,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^fetch_purchase_sales_men/$', FetchPurchaseSalesManList.as_view(), name='fetch_purchase_sales_men'),
     url(r'^fetch_dealers/$', FetchDealersList.as_view(), name='fetch_dealers'),
     url(r'^purchase_info/(?P<purchase_info_id>[\d+]+)/$', login_required(PurchaseInfoView.as_view()), name='purchase_info'),
-    # url(r'^logout/$', Logout.as_view(), name='logout_web'),
+    
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 

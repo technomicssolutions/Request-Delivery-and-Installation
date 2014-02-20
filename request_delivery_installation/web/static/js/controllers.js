@@ -40,8 +40,7 @@ function LoginController($scope, $element, $http, $timeout, $location)
 		    {
 
 		        if(data.result == 'error'){
-		        	alert('Hiii');
-		            $scope.error_message = data.message;
+		        	$scope.error_message = data.message;
 		            $scope.error_flag = true;
 		        } else {
 		            $scope.username = '';
@@ -140,7 +139,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
 		        	$scope.email = '';
 		        	$scope.user_type = '';
 		        	$scope.brand = '';
-		            document.location.href = '/accounts/login/';
+		            document.location.href = '/';
 		        }             
 		    }).error(function(data, status)
 		    {
@@ -291,8 +290,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	$scope.date = $('#datepicker').val();
     	$scope.delivery_requested_date = $('#delivery_date').val();
 		$scope.installation_requested_date = $('#installation_date').val();
-		alert($scope.dealers_name, $scope.new_dealer);
-    	if($scope.date == undefined || $scope.date == '') {
+		if($scope.date == undefined || $scope.date == '') {
 	        $scope.error_message = 'Please Enter Date';
 	        $scope.error_flag = true;
 	        return false;
@@ -448,34 +446,4 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		    }); 
     	}
     }
-    $scope.edit_purchase_info = function(){
-
-    	params = {
-	    	'delivery_requested_date':$scope.delivery_requested_date,
-	        'installation_requested_date':$scope.installation_requested_date,
-	        "csrfmiddlewaretoken" : $scope.csrf_token
-	    }
-	    $http({
-	        method : 'Post',
-	        url : "/purchase_info/"+$scope.purchase_id+'/',
-	        data : $.param(params),
-	        headers : {
-	        'Content-Type' : 'application/x-www-form-urlencoded'
-	        }
-	    }).success(function(data, status)
-	    {
-	        if(data.result == 'error'){
-	            $scope.error_message = data.message;
-	            $scope.error_flag = true;
-	        } else {
-	        	console.log(data);
-	            // document.location.href = '/';
-	        }             
-	    }).error(function(data, status)
-	    {
-	        $scope.error_message = data.message;
-	        $scope.error_flag = true;
-	    });
-    }
-
 }

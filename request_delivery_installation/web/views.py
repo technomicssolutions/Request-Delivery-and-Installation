@@ -85,6 +85,8 @@ class Signup(View):
             user.set_password(post_dict['password'])
             user.save()
             userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'] )
+            user_obj = authenticate(username=str(post_dict['username']), password=post_dict['password'])
+            login(request, user_obj)
             res = {'result': 'success', 'message': 'Loged in'}
         except Exception as ex:
             res = {'result': 'error', 'message': str(ex)}
@@ -254,7 +256,7 @@ class PurchaseInfoView(View):
                 delivery_date = purchase_detail.delivery_date
             year, month, day = post_dict['delivery_requested_date'].split('-')
             new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
-            print type(new_delivery_requested_date)
+            
             if delivery_date != new_delivery_requested_date:
                 quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
                 
@@ -273,7 +275,6 @@ class PurchaseInfoView(View):
                 purchase_info.save() 
                 year, month, day = purchase_info.installation_requested_date.split('-')    
                 installation_requested_date = datetime.date(int(year), int(month), int(day))
-                print type(installation_requested_date) 
                 installation_date_diff = (installation_requested_date - purchase_date).days
                 if delivery_date_diff < 3:
                     purchase_info.installation_requested_express_delivery = 'Express delivery'
@@ -281,8 +282,8 @@ class PurchaseInfoView(View):
                 purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j')   
             context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
-            print "except == ", str(ex)
             context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}
+        
         return render(request,'view_purchase_info.html', context)
 
 

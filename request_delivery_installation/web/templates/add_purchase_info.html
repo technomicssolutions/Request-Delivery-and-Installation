@@ -13,125 +13,171 @@
 			<h1>Add SubDealer</h1>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
-					<div class="sub_contents">
-						<label>Date</label>
-						<input type="text" id="datepicker" name="date" ng-model="date">
+					<div class="formrow">
+						<div class="formtext">Date :</div>
+						<div class="forminput"><input type="text" id="datepicker" name="date" ng-model="date"></div>
 					</div>
-					<div class="sub_contents">
-						<label>Dealer PO Number</label>
-						<input type="text" name="dealer_po_number" ng-model="dealer_po_number">
+					<div class="formrow">
+						<div class="formtext">Dealer PO Number :</div>
+						<div class="forminput"><input type="text" name="dealer_po_number" ng-model="dealer_po_number"></div>
 					</div>
-					<div class="sub_contents">
-						<label>Invoice Number</label>
-						<input type="text" name="invoice_no" ng-model="invoice_no">
+					<div class="formrow">
+						<div class="formtext">Invoice Number :</div>
+						<div class="forminput"><input type="text" name="invoice_no" ng-model="invoice_no"></div>
 					</div>
-					<div class="sub_contents">
-						<label>Dealer Name</label>
-						<input type="text" name="dealer_name" ng-model="dealer_name">
+					<div class="formrow">
+						<div class="formtext">Dealer Name :</div>
+						<div class="forminput"><input type="text" name="dealer_name" ng-model="dealer_name"></div>
 					</div>
-					<div class="sub_contents">
-						<label>Dealer Purchase in Charge</label>
-						<div ng-show="dealer_flag">
+					 <div class="formrow">
+						<div class="formtext">Dealer Purchase in Charge :</div>
+						<div ng-show="dealer_flag" class="forminput">
 							<select id="brand_options" ng-show="dealers.length" ng-model="dealers_name" ng-change="add_new_dealer()">
 								<option value="select">Select</option>
 								<option value="dealer.name" ng-repeat="dealer in dealers">[[dealer.name]]</option>
 								<option value="others">Other</option>
 							</select>
 						</div>
-						<input ng-show="other_dealer_flag" type="text" name="new_dealer" ng-model="new_dealer">
-						<!-- <input type="text" name="dealer_purchase_in_charge" ng-model="dealer_purchase_in_charge"><br> -->
+						<div class="forminput" ng-show="other_dealer_flag">
+							<input type="text" name="new_dealer" ng-model="new_dealer">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Purchaser Sales Man</label>
-						<div ng-show="purchase_sales_man_flag">
+					<div class="formrow">
+						<div class="formtext">Purchaser Sales Man :</div>
+						<div ng-show="purchase_sales_man_flag" class="forminput">
 							<select id="brand_options" ng-show="purchase_sales_men.length" ng-model="existing_purchase_sales_man" ng-change="add_new_purchase_sales_man()">
 								<option value="select">Select</option>
 								<option value="purchase_sales_man.name" ng-repeat="purchase_sales_man in purchase_sales_men">[[purchase_sales_man.name]]</option>
 								<option value="others">Other</option>
 							</select>
 						</div>
-						<input ng-show="other_purchase_sales_man_flag" type="text" name="new_purchase_sales_man" ng-model="new_purchase_sales_man">
-						<!-- <input type="text" name="purchaser_sales_man" ng-model="purchaser_sales_man"><br> -->
+						<div class="forminput" ng-show="other_purchase_sales_man_flag">
+							<input type="text" name="new_purchase_sales_man" ng-model="new_purchase_sales_man">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Brand</label>
-						<div ng-show="brand_flag">
+					<div class="formrow">
+						<div class="formtext">Brand :</div>
+						<div ng-show="brand_flag" class="forminput">
 							<select id="brand_options"ng-show="brands.length" ng-model="brandname" ng-change="add_new_brand_name()">
 								<option value="select">Select</option>
 								<option value="brand.brand_name" ng-repeat="brand in brands">[[brand.brand_name]]</option>
 								<option value="others">Other</option>
 							</select>
 						</div>
-						<input ng-show="other_brand_flag" type="text" name="brand" ng-model="new_brand">
+						<div class="forminput" ng-show="other_brand_flag" >
+							<input type="text" name="brand" ng-model="new_brand">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Model</label>
-						<input type="text" name="model" ng-model="model">
+					<div class="formrow">
+						<div class="formtext">Model :</div>
+						<div class="forminput">
+							<input type="text" name="model" ng-model="model">
+						</div>
 					</div>
 					
-					<div class="sub_contents">
-						<label>Contact Person</label>
-						<input type="text" name="contact_person" ng-model="contact_person">
+					<div class="formrow">
+						<div class="formtext">Contact Person : </div>
+						<div class="forminput">
+							<input type="text" name="contact_person" ng-model="contact_person">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Block/House Number</label>
-						<input type="text" name="block_house_no" ng-model="block_house_no">
+					<div class="formrow">
+						<div class="formtext">Block/House Number : </div>
+						<div class="forminput">
+							<input type="text" name="block_house_no" ng-model="block_house_no">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Floor Number</label>
-						<input type="text" name="floor_no" ng-model="floor_no">
+					<div class="formrow">
+						<div class="formtext">Floor Number : </div>
+						<div class="forminput">
+							<input type="text" name="floor_no" ng-model="floor_no">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Unit Number</label>
-						<input type="text" name="unit_no" ng-model="unit_no">
+					<div class="formrow">
+						<div class="formtext">Unit Number : </div>
+						<div class="forminput">
+							<input type="text" name="unit_no" ng-model="unit_no">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Building Name</label>
-						<input type="text" name="building_name" ng-model="building_name">
+					<div class="formrow">
+						<div class="formtext">Building Name :</div>
+						<div class="forminput">
+							<input type="text" name="building_name" ng-model="building_name">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Street Name</label>
-						<input type="text" name="street_name" ng-model="street_name">
+					<div class="formrow">
+						<div class="formtext">Street Name :</div>
+						<div class="forminput">
+							<input type="text" name="street_name" ng-model="street_name">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Postal Code</label>
-						<input type="text" name="postal_code" ng-model="postal_code">
+					<div class="formrow">
+						<div class="formtext">Postal Code :</div>
+						<div class="forminput">
+							<input type="text" name="postal_code" ng-model="postal_code">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Email </label>
-						<input type="text" name="email" ng-model="email">
+					<div class="formrow">
+						<div class="formtext">Email  :</div>
+						<div class="forminput">
+							<input type="text" name="email" ng-model="email">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Telephone Number </label>
-						<input type="text" name="telephone_no" ng-model="telephone_no">
+					<div class="formrow">
+						<div class="formtext">Telephone Number :</div>
+						<div class="forminput">
+							<input type="text" name="telephone_no" ng-model="telephone_no">
+						</div>	
 					</div>
-					<div class="sub_contents">
-						<label>Mobile Number</label>
-						<input type="text" name="mobile_no" ng-model="mobile_no">
+					<div class="formrow">
+						<div class="formtext">Mobile Number :</div>
+						<div class="forminput">
+							<input type="text" name="mobile_no" ng-model="mobile_no">
+						</div>	
 					</div>
-					<div class="sub_contents">
-						<label>Quantity</label>
-						<input type="text" name="quantity" ng-model="quantity">
+					<div class="formrow">
+						<div class="formtext">Quantity :</div>
+						<div class="forminput">
+							<input type="text" name="quantity" ng-model="quantity">
+						</div>	
 					</div>
-					<div class="sub_contents">
-						<label>Delivery Requested Date</label>
-						<input type="text" id="delivery_date" name="delivery_requested_date" ng-model="delivery_requested_date">
+					<div class="formrow">
+						<div class="formtext">Delivery Requested Date :</div>
+						<div class="forminput">
+							<input type="text" id="delivery_date" name="delivery_requested_date" ng-model="delivery_requested_date">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Installation Requested Date</label>
-						<input type="text" name="installation_requested_date" id="installation_date" ng-model="installation_requested_date">
+					<div class="formrow">
+						<div class="formtext">Installation Requested Date :</div>
+						<div class="forminput">
+							<input type="text" name="installation_requested_date" id="installation_date" ng-model="installation_requested_date">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Extra Man Power</label>
-						<input type="text" name="extra_man_power" ng-model="extra_man_power">
+					<div class="formrow">
+						<div class="formtext">Extra Man Power :</div>
+						<div class="forminput">
+							<input type="text" name="extra_man_power" ng-model="extra_man_power">
+						</div>
 					</div>
-					<div class="sub_contents">
-						<label>Remarks</label>
-						<textarea id="text_area" type="text" name="remarks" ng-model="remarks"></textarea>
+					<div class="formrow">
+						<div class="formtext">Remarks :</div>
+						<div class="forminput">
+							<textarea id="text_area" type="text" name="remarks" ng-model="remarks"></textarea>
+						</div>
+					</div> 
+					<div class="formrow">
+						<div class="formtext"></div>
+						<div class="forminput">
+							<div class="buttons">
+								<input type="submit" ng-click="add_purchase_info()" value="Add">
+							</div>
+						</div>
 					</div>
-					<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
-					<div class="buttons">
-						<input type="submit" ng-click="add_purchase_info()" value="Add">
+					<div class="formrow">
+						<div class="formtext"></div>
+						<div class="forminput">
+							<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
+						</div>
 					</div>
 				</form>
 			</div>

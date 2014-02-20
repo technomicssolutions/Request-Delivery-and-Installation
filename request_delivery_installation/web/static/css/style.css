@@ -71,7 +71,7 @@ h1,h2{
 }
 .form_content form {
     height: 100%;
-    width: 53%;
+    width: 100%;
     margin: auto;
 }
 .subcontents {
@@ -142,4 +142,25 @@ textarea {
 }
 #view_purchase_info .sub_contents input[type='text'], input[type="password"]{
     width: 28%;
+}
+.formrow {
+    display: inline-block;
+    line-height: 15px;
+    margin-bottom: -11px;
+    margin-top: 8px;
+    width: 100%;
+}
+.formtext
+{
+    float:left;
+    width:42%;
+    text-align:right;
+    margin-right:5px;
+}
+.forminput
+{
+    float:right;
+    width:53%;
+    text-align:left;
+    margin-right:15px;
 }
