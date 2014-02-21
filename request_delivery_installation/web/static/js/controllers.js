@@ -453,3 +453,16 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	}
     }
 }
+
+function HomeController($scope, $element, $http, $timeout, $location)
+{
+	$scope.error_flag = false;
+	$scope.init = function(csrf_token)
+    {
+        $scope.csrf_token = csrf_token;  
+    }
+    $scope.search_purchase_info = function (){
+    	console.log($scope.invoice_number);
+    	document.location.href ='/search_purchase_info/'+$scope.invoice_number+'/';
+    }
+}

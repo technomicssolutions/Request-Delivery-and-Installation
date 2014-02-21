@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Home
 {% endblock title %}
-{% block controller %}   
+{% block controller %} 
+	ng-controller="HomeController" ng-init="init('{{csrf_token}}')"   
 {% endblock controller %}
 {% block body_id %}home{% endblock %}"  
 
@@ -9,33 +10,46 @@
 	<div class="contents">
 		{% include 'header.html' %}
 		<div class="subcontents">
-			<table border="0" class="subcontent_table" cellspacing="0">
-				<tr>
-					<th>Sl No</th>
-					<th>Date</th>
-					<th>Dealer PO Number</th>
-					<th>Dealer Name</th>
-					<th>Purchaser-In-Charge</th>
-					<th>Purchaser Sales Man</th>
-					<th>Brand</th>
-					<th>Model</th>
-					<th>View</th>
-				</tr>
-				{% if purchases %}
-					{% for purchase in purchases %}
-						<tr class="{% cycle 'odd' 'even' %}">
-							<th>{{purchase.slno}}</th>
-							<th>{{purchase.date}}</th>
-							<th>{{purchase.dealer_po_number}}</th>
-							<th>{{purchase.dealer_name}}</th>
-							<th>{{purchase.dealer_purchase_in_charge}}</th>
-							<th>{{purchase.purchaser_sales_man}}</th>
-							<th>{{purchase.brand}}</th>
-							<th>{{purchase.model}}</th>
-							<th><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></th>
-						</tr>	
-					{% endfor %}
+			{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
+				{% if message %}
+					<p class="error_message"> {{message}} </p>
 				{% endif %}
+					<div>
+						Please enter Invoice Number
+						<input type="text" name="invoice_number" ng-model="invoice_number">
+						<a href="#" ng-click="search_purchase_info()">Search</a>
+					</div>
+				
+			{% else %}
+				<table border="0" class="subcontent_table" cellspacing="0">
+					<tr>
+						<th>Sl No</th>
+						<th>Date</th>
+						<th>Dealer PO Number</th>
+						<th>Dealer Name</th>
+						<th>Purchaser-In-Charge</th>
+						<th>Purchaser Sales Man</th>
+						<th>Brand</th>
+						<th>Model</th>
+						<th>View</th>
+					</tr>
+					{% if purchases %}
+						{% for purchase in purchases %}
+							<tr class="{% cycle 'odd' 'even' %}">
+								<th>{{purchase.slno}}</th>
+								<th>{{purchase.date}}</th>
+								<th>{{purchase.dealer_po_number}}</th>
+								<th>{{purchase.dealer_name}}</th>
+								<th>{{purchase.dealer_purchase_in_charge}}</th>
+								<th>{{purchase.purchaser_sales_man}}</th>
+								<th>{{purchase.brand}}</th>
+								<th>{{purchase.model}}</th>
+								<th><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></th>
+							</tr>	
+						{% endfor %}
+					{% endif %}
+				</table>
+			{% endif %}
 		</div>
 	</div>
 {% endblock content%}

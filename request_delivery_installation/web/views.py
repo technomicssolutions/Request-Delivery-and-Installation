@@ -286,6 +286,26 @@ class PurchaseInfoView(View):
         
         return render(request,'view_purchase_info.html', context)
 
+class SearchPurchaseInfo(View):
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            purchase_info = PurchaseInformation.objects.get(invoice_no=kwargs['invoice_no'])
+            purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
+        except PurchaseInformation.DoesNotExist:
+            purchase_info = None
+            message = 'No Purchase Information with this Invoice No is Available'
+            context = {
+                'message': message
+            }
+            return render(request, 'home.html', context)
+        context = {
+            'purchase': purchase_info,
+        }
+        return render(request, 'view_purchase_info.html', context)
+
+
 
 
         
