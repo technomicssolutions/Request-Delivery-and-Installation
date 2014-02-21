@@ -103,6 +103,12 @@
 						{% endif %}
 					</div>
 				{% endfor %}
+				{% if purchase.delivery_requested_express_delivery%}
+					<div class="sub_contents">
+						<label>Express Delivery : </label>
+						<span>{{purchase.delivery_requested_express_delivery}}</span>
+					</div>
+				{% endif %}
 				<div class="sub_contents">
 					<label>Installation Requested Date : </label>
 					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
@@ -111,9 +117,20 @@
 						<span> {{purchase.installation_requested_date}} </span>
 					{% endif %}
 				</div>
+				{% if purchase.installation_requested_express_delivery%}
+					<div class="sub_contents">
+						<label>Express Delivery : </label>
+						<span>{{purchase.installation_requested_express_delivery}}</span>
+					</div>
+				{% endif %}
 				<div class="sub_contents">
 					<label>Extra Man Power : </label>
-					<span>{{purchase.extra_man_power_request}}</span>
+					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
+						<input type="text" name="extra_man_power_request" value="{{purchase.extra_man_power_request}}"><br>
+					{% else %}
+						<span>{{purchase.extra_man_power_request}}</span>
+					{% endif %}
+					
 				</div>
 				<div class="sub_contents">
 					<label>Remarks : </label>

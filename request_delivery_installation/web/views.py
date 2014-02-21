@@ -246,7 +246,7 @@ class PurchaseInfoView(View):
         post_dict = request.POST
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         try:
-
+            purchase_info.extra_man_power_request = post_dict['extra_man_power_request']
             quantity = ''
             delivery_date = ''
 
@@ -266,10 +266,13 @@ class PurchaseInfoView(View):
                 if delivery_date_diff < 3:
                     purchase_info.delivery_requested_express_delivery = 'Express delivery'
                     purchase_info.save()
+                else:
+                    purchase_info.delivery_requested_express_delivery = ''
                 purchase_info.delivery_requested_date.clear()
                 purchase_info.delivery_requested_date_change = purchase_info.delivery_requested_date_change + 1
                 purchase_info.delivery_requested_date.add(quantity_delivery_date) 
                 purchase_info.save()
+
             if purchase_info.installation_requested_date != post_dict['installation_requested_date']:
                 purchase_info.installation_requested_date = post_dict['installation_requested_date']
                 purchase_info.save() 
@@ -278,7 +281,9 @@ class PurchaseInfoView(View):
                 installation_date_diff = (installation_requested_date - purchase_date).days
                 if delivery_date_diff < 3:
                     purchase_info.installation_requested_express_delivery = 'Express delivery'
-                    purchase_info.save()   
+                    purchase_info.save()  
+                else:
+                     purchase_info.installation_requested_express_delivery = ''
                 purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j')   
             context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
