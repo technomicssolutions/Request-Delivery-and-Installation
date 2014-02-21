@@ -272,19 +272,24 @@ class PurchaseInfoView(View):
                 purchase_info.delivery_requested_date_change = purchase_info.delivery_requested_date_change + 1
                 purchase_info.delivery_requested_date.add(quantity_delivery_date) 
                 purchase_info.save()
-
+            else:
+                purchase_info.delivery_requested_express_delivery = purchase_info.delivery_requested_express_delivery
+                purchase_info.save()
             if purchase_info.installation_requested_date != post_dict['installation_requested_date']:
                 purchase_info.installation_requested_date = post_dict['installation_requested_date']
                 purchase_info.save() 
                 year, month, day = purchase_info.installation_requested_date.split('-')    
                 installation_requested_date = datetime.date(int(year), int(month), int(day))
                 installation_date_diff = (installation_requested_date - purchase_date).days
-                if delivery_date_diff < 3:
+                if installation_date_diff < 3:
                     purchase_info.installation_requested_express_delivery = 'Express delivery'
                     purchase_info.save()  
                 else:
-                     purchase_info.installation_requested_express_delivery = ''
-                purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j')   
+                    purchase_info.installation_requested_express_delivery = ''
+                purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j') 
+            else:
+                purchase_info.installation_requested_express_delivery = purchase_info.installation_requested_express_delivery 
+                purchase_info.save() 
             context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
             context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}

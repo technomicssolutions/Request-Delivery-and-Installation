@@ -11,7 +11,7 @@
 		{% include 'header.html' %}
 		
 		<div class="form_content">
-			<h2>Puchase No : {{purchase.slno}}</h2>
+			<h2>Purchase No : {{purchase.slno}}</h2>
 			<form name="add_subdealer_content" method="post" action="{% url 'purchase_info' purchase_info_id=purchase.id %}">{% csrf_token %}
 				<div class="sub_contents">
 					<label>Created By : </label>
