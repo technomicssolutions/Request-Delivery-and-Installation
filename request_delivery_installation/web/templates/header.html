@@ -1,8 +1,10 @@
 <div class="nav">
 	<div class="nav_right">
-		
+		{% if user.is_superuser %}
+			<a href="{% url 'register' %}">Register New User</a>
+		{% endif %}
 		<a href="{% url 'home' %}">Purchase Details</a>
-		{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser %}
+		{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
 			<a href="{% url 'add_purchase_info' %}">Add Purchase Info</a>
 		{% endif %}
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}

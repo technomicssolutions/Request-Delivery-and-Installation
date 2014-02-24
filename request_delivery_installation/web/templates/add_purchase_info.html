@@ -15,22 +15,22 @@
 				<form name="add_subdealer_content">{% csrf_token %}
 					<div class="formrow">
 						<div class="formtext">Date :</div>
-						<div class="forminput"><input type="text" id="datepicker" name="date" ng-model="date"></div>
+						<div class="forminput"><input type="text" name="date" value="{{date}}"></div>
 					</div>
 					<div class="formrow">
 						<div class="formtext">Dealer PO Number :</div>
 						<div class="forminput"><input type="text" name="dealer_po_number" ng-model="dealer_po_number"></div>
 					</div>
 					<div class="formrow">
-						<div class="formtext">Invoice Number :</div>
-						<div class="forminput"><input type="text" name="invoice_no" ng-model="invoice_no"></div>
+						<div class="formtext">Delivery Order Number :</div>
+						<div class="forminput"><input type="text" name="delivery_order_number" ng-model="delivery_order_number"></div>
 					</div>
 					<div class="formrow">
-						<div class="formtext">Dealer Name :</div>
+						<div class="formtext">Dealer/Company Name :</div>
 						<div class="forminput"><input type="text" name="dealer_name" ng-model="dealer_name"></div>
 					</div>
 					 <div class="formrow">
-						<div class="formtext">Dealer Purchase in Charge :</div>
+						<div class="formtext">Dealer Purchaser :</div>
 						<div ng-show="dealer_flag" class="forminput">
 							<select id="brand_options" ng-show="dealers.length" ng-model="dealers_name" ng-change="add_new_dealer()">
 								<option value="select">Select</option>
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 					<div class="formrow">
-						<div class="formtext">Purchaser Sales Man :</div>
+						<div class="formtext">Dealer Sales Man :</div>
 						<div ng-show="purchase_sales_man_flag" class="forminput">
 							<select id="brand_options" ng-show="purchase_sales_men.length" ng-model="existing_purchase_sales_man" ng-change="add_new_purchase_sales_man()">
 								<option value="select">Select</option>
@@ -76,10 +76,22 @@
 					</div>
 					
 					<div class="formrow">
-						<div class="formtext">Contact Person : </div>
+						<div class="formtext">Customer : </div>
 						<div class="forminput">
-							<input type="text" name="contact_person" ng-model="contact_person">
+							<input type="text" name="customer" ng-model="customer">
 						</div>
+					</div>
+					<div class="formrow">
+						<div class="formtext">Telephone Number :</div>
+						<div class="forminput">
+							<input type="text" name="telephone_no" ng-model="telephone_no">
+						</div>	
+					</div>
+					<div class="formrow">
+						<div class="formtext">Mobile Number :</div>
+						<div class="forminput">
+							<input type="text" name="mobile_no" ng-model="mobile_no">
+						</div>	
 					</div>
 					<div class="formrow">
 						<div class="formtext">Block/House Number : </div>
@@ -124,18 +136,6 @@
 						</div>
 					</div>
 					<div class="formrow">
-						<div class="formtext">Telephone Number :</div>
-						<div class="forminput">
-							<input type="text" name="telephone_no" ng-model="telephone_no">
-						</div>	
-					</div>
-					<div class="formrow">
-						<div class="formtext">Mobile Number :</div>
-						<div class="forminput">
-							<input type="text" name="mobile_no" ng-model="mobile_no">
-						</div>	
-					</div>
-					<div class="formrow">
 						<div class="formtext">Quantity :</div>
 						<div class="forminput">
 							<input type="text" name="quantity" ng-model="quantity">
@@ -144,13 +144,13 @@
 					<div class="formrow">
 						<div class="formtext">Delivery Requested Date :</div>
 						<div class="forminput">
-							<input type="text" id="delivery_date" name="delivery_requested_date" ng-model="delivery_requested_date">
+							<input type="text" name="delivery_requested_date" ng-model="delivery_requested_date">
 						</div>
 					</div>
 					<div class="formrow">
 						<div class="formtext">Installation Requested Date :</div>
 						<div class="forminput">
-							<input type="text" name="installation_requested_date" id="installation_date" ng-model="installation_requested_date">
+							<input type="text" name="installation_requested_date" ng-model="installation_requested_date">
 						</div>
 					</div>
 					<div class="formrow">

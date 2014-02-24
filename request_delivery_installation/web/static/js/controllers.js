@@ -212,8 +212,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	$scope.dealer_flag = true;
 	$scope.other_dealer_flag = false;
 	$scope.brand_val = '';
-	$scope.purchaser_sales_man = '';
-	$scope.dealer_purchase_in_charge = '';
+	$scope.dealer_sales_man = '';
+	$scope.dealer_purchaser = '';
 	$scope.date = '';
 	$scope.delivery_requested_date = ''; 
 	$scope.installation_requested_date = '';
@@ -323,8 +323,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Model';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.contact_person == undefined || $scope.contact_person == '' ) {
-	        $scope.error_message = 'Please Enter Contact Person';
+	    } else if($scope.customer == undefined || $scope.customer == '' ) {
+	        $scope.error_message = 'Please Enter Customer';
 	        $scope.error_flag = true;
 	        return false;
 	    } else if($scope.block_house_no == undefined || $scope.block_house_no == '' ) {
@@ -395,25 +395,25 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		    	$scope.brand_val = $scope.brandname;
 		    }
 		    if ($scope.existing_purchase_sales_man == 'others' || $scope.existing_purchase_sales_man == 'select') {
-		    	$scope.purchaser_sales_man = $scope.new_purchase_sales_man;
+		    	$scope.dealer_sales_man = $scope.new_purchase_sales_man;
 		    } else {
-		    	$scope.purchaser_sales_man = $scope.existing_purchase_sales_man;
+		    	$scope.dealer_sales_man = $scope.existing_purchase_sales_man;
 		    }
 		    if ($scope.dealers_name == 'others' || $scope.dealers_name == 'select') {
-		    	$scope.dealer_purchase_in_charge = $scope.new_dealer;
+		    	$scope.dealer_purchaser = $scope.new_dealer;
 		    } else {
-		    	$scope.dealer_purchase_in_charge = $scope.dealers_name;
+		    	$scope.dealer_purchaser = $scope.dealers_name;
 		    }
     		params = {
 		    	'date': $scope.date,
 		    	'dealer_po_number': $scope.dealer_po_number,
 		    	'invoice_no': $scope.invoice_no,
 		        'dealer_name': $scope.dealer_name,
-		        'dealer_purchase_in_charge': $scope.dealer_purchase_in_charge,
-		        'purchaser_sales_man': $scope.purchaser_sales_man,
+		        'dealer_purchaser': $scope.dealer_purchaser,
+		        'dealer_sales_man': $scope.dealer_sales_man,
 		        'brand':$scope.brand_val,
 		        'model':$scope.model,
-		        'contact_person':$scope.contact_person,
+		        'customer':$scope.customer,
 		        'block_house_no': $scope.block_house_no,
 		        'floor_no': $scope.floor_no,
 		        'unit_no': $scope.unit_no,
@@ -462,7 +462,7 @@ function HomeController($scope, $element, $http, $timeout, $location)
         $scope.csrf_token = csrf_token;  
     }
     $scope.search_purchase_info = function (){
-    	console.log($scope.invoice_number);
-    	document.location.href ='/search_purchase_info/'+$scope.invoice_number+'/';
+    	console.log($scope.delivery_order_number);
+    	document.location.href ='/search_purchase_info/'+$scope.delivery_order_number+'/';
     }
 }

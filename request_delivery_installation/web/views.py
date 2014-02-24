@@ -85,8 +85,6 @@ class Signup(View):
             user.set_password(post_dict['password'])
             user.save()
             userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'] )
-            user_obj = authenticate(username=str(post_dict['username']), password=post_dict['password'])
-            login(request, user_obj)
             res = {'result': 'success', 'message': 'Loged in'}
         except Exception as ex:
             res = {'result': 'error', 'message': str(ex)}
@@ -132,8 +130,12 @@ class AddSubDealer(View):
 
 class AddPurchanseInfo(View):
     def get(self, request, *args, **kwargs):
-
-        return render(request, 'add_purchase_info.html', {})
+        current_date = datetime.datetime.now().date()
+        print current_date
+        context = {
+            'date': current_date.strftime('%Y-%m-%d'),
+        }
+        return render(request, 'add_purchase_info.html', context)
 
     def post(self, request, *args, **kwargs):
         post_dict = request.POST
@@ -150,13 +152,13 @@ class AddPurchanseInfo(View):
             purchase_info.date = post_dict['date']
             purchase_info.slno = sl_no
             purchase_info.dealer_po_number = post_dict['dealer_po_number']
-            purchase_info.invoice_no = post_dict['invoice_no']
+            purchase_info.delivery_order_number = post_dict['delivery_order_number']
             purchase_info.dealer_name = post_dict['dealer_name']
-            purchase_info.dealer_purchase_in_charge = post_dict['dealer_purchase_in_charge']
-            purchase_info.purchaser_sales_man = post_dict['purchaser_sales_man']
+            purchase_info.dealer_purchaser = post_dict['dealer_purchaser']
+            purchase_info.dealer_sales_man = post_dict['dealer_sales_man']
             purchase_info.brand = post_dict['brand']
             purchase_info.model = post_dict['model']
-            purchase_info.contact_person = post_dict['contact_person']
+            purchase_info.customer = post_dict['customer']
             purchase_info.block_house_number = post_dict['block_house_no']
             purchase_info.floor_number = post_dict['floor_no']
             purchase_info.unit_number = post_dict['unit_no']
@@ -208,21 +210,21 @@ class FetchBrandNames(View):
 
 class FetchPurchaseSalesManList(View):
     def get(self, request, *args, **kwargs):
-        ctx_purchaser_sales_men = []
-        purchaser_sales_men =  PurchaseInformation.objects.all().values_list('purchaser_sales_man', flat = True).distinct()
-        if purchaser_sales_men.count() > 0:
-            for purchaser_sales_man in purchaser_sales_men:
-                ctx_purchaser_sales_men.append({
-                   'name': purchaser_sales_man
+        ctx_dealer_sales_men = []
+        dealer_sales_men =  PurchaseInformation.objects.all().values_list('dealer_sales_man', flat = True).distinct()
+        if dealer_sales_men.count() > 0:
+            for dealer_sales_man in dealer_sales_men:
+                ctx_dealer_sales_men.append({
+                   'name': dealer_sales_man
                 })
-        response = simplejson.dumps({'result': 'sucess', 'purchase_sales_men': ctx_purchaser_sales_men})
+        response = simplejson.dumps({'result': 'sucess', 'purchase_sales_men': ctx_dealer_sales_men})
         status_code = 200
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 
 class FetchDealersList(View):
     def get(self, request, *args, **kwargs):
         ctx_dealers = []
-        dealers =  PurchaseInformation.objects.all().values_list('dealer_purchase_in_charge', flat = True).distinct()
+        dealers =  PurchaseInformation.objects.all().values_list('dealer_purchaser', flat = True).distinct()
         if dealers.count() > 0:
             for dealer in dealers:
                 ctx_dealers.append({
@@ -301,11 +303,11 @@ class SearchPurchaseInfo(View):
     def get(self, request, *args, **kwargs):
 
         try:
-            purchase_info = PurchaseInformation.objects.get(invoice_no=kwargs['invoice_no'])
+            purchase_info = PurchaseInformation.objects.get(delivery_order_number=kwargs['delivery_order_number'])
             purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
         except PurchaseInformation.DoesNotExist:
             purchase_info = None
-            message = 'No Purchase Information with this Invoice No is Available'
+            message = 'No Purchase Information with this Delivery Ordeer Number is Available'
             context = {
                 'message': message
             }
