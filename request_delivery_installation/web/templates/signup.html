@@ -9,6 +9,7 @@
 {% block content %}
 
 	<div class="contents">
+		{% include 'header.html' %}
 		<div class="signup_form">
 			<h2>Sign Up</h2>
 			<form name="sognup_content">{% csrf_token %}
@@ -51,8 +52,7 @@
 				<p ng-show="error_flag" class="error_msg">[[error_message]]</p><br>
 				<div class="sub_contents">
 					<div class="buttons">
-						<input type="submit" ng-click="signup()" value="Signup">
-						<a href="{% url 'login' %}">Login</a>
+						<input type="submit" ng-click="signup()" value="Register">
 					</div>
 				</div>
 			</form>

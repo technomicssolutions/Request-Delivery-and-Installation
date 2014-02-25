@@ -2,6 +2,26 @@ function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
+
+function get_day_name(day) {
+	var weekday=new Array(7);
+		weekday[0]="Sunday";
+		weekday[1]="Monday";
+		weekday[2]="Tuesday";
+		weekday[3]="Wednesday";
+		weekday[4]="Thursday";
+		weekday[5]="Friday";
+		weekday[6]="Saturday";
+	var day_name = weekday[day]
+	return day_name;
+}
+
+function convert_to_date(date_val) {
+	var date_value = date_val.split('-');
+	var converted_date = new Date(date_value[0],date_value[1]-1, date_value[2]);
+	return converted_date;
+}
+
 function LoginController($scope, $element, $http, $timeout, $location)
 {
 	$scope.error_flag = false;
@@ -287,9 +307,17 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	}
     }
     $scope.is_purchase_form_valid = function(){
-    	$scope.date = $('#datepicker').val();
+    	$scope.date = $('#date').val();
     	$scope.delivery_requested_date = $('#delivery_date').val();
 		$scope.installation_requested_date = $('#installation_date').val();
+
+		// Date validation 1) Check the entered date belongs to Sunday or Saturday , 2) Check the installation date is less than the delivery date
+		var delivery_dates = convert_to_date($('#delivery_date').val());
+		var delivery_dates_day_name = get_day_name(delivery_dates.getDay());
+		var installation_dates = convert_to_date($('#installation_date').val());
+		var installation_dates_day_name = get_day_name(installation_dates.getDay());
+		var purchase_date = convert_to_date($('#date').val());
+		
 		if($scope.date == undefined || $scope.date == '') {
 	        $scope.error_message = 'Please Enter Date';
 	        $scope.error_flag = true;
@@ -298,28 +326,27 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_message = 'Please Enter Dealer PO Number';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if ($scope.invoice_no == undefined || $scope.invoice_no == '') {
-	    	$scope.error_message = 'Please Enter Invoice Number';
+	    } else if ($scope.delivery_order_number == undefined || $scope.delivery_order_number == '') {
+	    	$scope.error_message = 'Please Enter Delivery Order Number';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.dealer_name == undefined || $scope.dealer_name == '') {
-	        $scope.error_message = 'Please Enter Dealer Name';
+	    } else if($scope.dealer_company_name == undefined || $scope.dealer_company_name == '') {
+	        $scope.error_message = 'Please Enter Dealer/Company Name';
 	        $scope.error_flag = true;
 	        return false;
 	    } else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || (($scope.dealers_name == 'select' ) && ($scope.new_dealer == undefined || $scope.new_dealer == ''))) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
-	        $scope.error_message = 'Please Choose or Add Dealer Purchase in Charge';
+	        $scope.error_message = 'Please Choose or Add Dealer Purchaser';
 	        $scope.error_flag = true;
 	        return false;
 	    } else if(($scope.existing_purchase_sales_man == undefined || $scope.existing_purchase_sales_man == '' || $scope.existing_purchase_sales_man == '? undefined:undefined ?' || (($scope.existing_purchase_sales_man == 'select') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) || (($scope.existing_purchase_sales_man == 'others') && ($scope.new_purchase_sales_man == undefined || $scope.new_purchase_sales_man == ''))) {
-	        $scope.error_message = 'Please Choose or Add Purchaser Sales Man';
+	        $scope.error_message = 'Please Choose or Add Dealer Sales Man';
 	        $scope.error_flag = true;
 	        return false;
 	    } else if(($scope.brandname == undefined || $scope.brandname == '' || $scope.brandname == '? undefined:undefined ?' || (($scope.brandname == 'select') && ($scope.new_brand == undefined || $scope.new_brand == ''))) || (($scope.brandname == 'others')&& ($scope.new_brand == undefined || $scope.new_brand == ''))) {
     		$scope.error_message = 'Please Choose or Add Brand Name';
 	        $scope.error_flag = true;
 	        return false;
-	    } 
-	    else if($scope.model == undefined || $scope.model == '' ) {
+	    } else if($scope.model == undefined || $scope.model == '' ) {
 	    	$scope.error_message = 'Please Enter Model';
 	        $scope.error_flag = true;
 	        return false;
@@ -327,7 +354,15 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_message = 'Please Enter Customer';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.block_house_no == undefined || $scope.block_house_no == '' ) {
+	    } else if ($scope.telephone_no == undefined || $scope.telephone_no == '') {
+	    	$scope.error_message = 'Please Enter Telephone Number';
+	        $scope.error_flag = true;
+	        return false;
+        } else if ($scope.mobile_no == undefined || $scope.mobile_no == '') {
+	    	$scope.error_message = 'Please Enter Mobile Number';
+	        $scope.error_flag = true;
+	        return false;
+        } else if($scope.block_house_no == undefined || $scope.block_house_no == '' ) {
 	        $scope.error_message = 'Please Enter Block or House No';
 	        $scope.error_flag = true;
 	        return false;
@@ -355,15 +390,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Email';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if ($scope.telephone_no == undefined || $scope.telephone_no == '') {
-	    	$scope.error_message = 'Please Enter Telephone Number';
-	        $scope.error_flag = true;
-	        return false;
-        } else if ($scope.mobile_no == undefined || $scope.mobile_no == '') {
-	    	$scope.error_message = 'Please Enter Mobile Number';
-	        $scope.error_flag = true;
-	        return false;
-        } else if($scope.quantity == undefined || $scope.quantity == '' ) {
+	    } else if($scope.quantity == undefined || $scope.quantity == '' ) {
 	        $scope.error_message = 'Please Enter Quantity';
 	        $scope.error_flag = true;
 	        return false;
@@ -371,10 +398,26 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_message = 'Please Enter Delivery Requested Date';
 	        $scope.error_flag = true;
 	        return false;
+	    } else if (delivery_dates < purchase_date) {
+	    	$scope.error_message = 'Delivery Requested Date should be greater than or equal to the Purchase date';
+	        $scope.error_flag = true;
+	        return false;
+		} else if(delivery_dates_day_name == 'Sunday' || delivery_dates_day_name == 'Saturday') {
+	    	$scope.error_message = 'Entered Delivery Requested Date is a '+delivery_dates_day_name;
+	    	$scope.error_flag = true;
+	    	return false;
 	    } else if($scope.installation_requested_date == undefined || $scope.installation_requested_date == '' ) {
 	        $scope.error_message = 'Please Enter Installation Requested Date';
 	        $scope.error_flag = true;
 	        return false;
+	    } else if (installation_dates < delivery_dates) {
+	    	$scope.error_message = 'Installation Requested Date should be greater than or equal to the Delivery Requested Date';
+	        $scope.error_flag = true;
+	        return false;
+		} else if(installation_dates_day_name == 'Sunday' || installation_dates_day_name == 'Saturday') {
+	    	$scope.error_message = 'Entered Installation Requested Date is a '+installation_dates_day_name;
+	    	$scope.error_flag = true;
+	    	return false;
 	    } else if($scope.extra_man_power == undefined || $scope.extra_man_power == '' ) {
 	        $scope.error_message = 'Please Enter Extra Man Power';
 	        $scope.error_flag = true;
@@ -407,8 +450,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     		params = {
 		    	'date': $scope.date,
 		    	'dealer_po_number': $scope.dealer_po_number,
-		    	'invoice_no': $scope.invoice_no,
-		        'dealer_name': $scope.dealer_name,
+		    	'delivery_order_number': $scope.delivery_order_number,
+		        'dealer_company_name': $scope.dealer_company_name,
 		        'dealer_purchaser': $scope.dealer_purchaser,
 		        'dealer_sales_man': $scope.dealer_sales_man,
 		        'brand':$scope.brand_val,
@@ -442,7 +485,85 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        if(data.result == 'error'){
 		            $scope.error_message = data.message;
 		            $scope.error_flag = true;
-		        } else {
+		        } 
+		        else {
+		            document.location.href = '/';
+		        }             
+		    }).error(function(data, status)
+		    {
+		        $scope.error_message = data.message;
+		        $scope.error_flag = true;
+		    }); 
+    	}
+    }
+    $scope.is_edit_purchase_form_valid = function(){
+    	$scope.date = $('#date').val();
+    	$scope.delivery_requested_date = $('#delivery_date').val();
+		$scope.installation_requested_date = $('#installation_date').val();
+		$scope.extra_man_power = $('#extra_man_power').val();
+
+		// Date validation 1) Check the entered date belongs to Sunday or Saturday , 2) Check the installation date is less than the delivery date
+		
+		var delivery_dates = convert_to_date($('#delivery_date').val());
+		var delivery_dates_day_name = get_day_name(delivery_dates.getDay());
+		var installation_dates = convert_to_date($('#installation_date').val());
+		var installation_dates_day_name = get_day_name(installation_dates.getDay());
+		var purchase_date = convert_to_date($('#date').val());
+		if($scope.delivery_requested_date == undefined || $scope.delivery_requested_date == '' ) {
+	        $scope.error_message = 'Please Enter Delivery Requested Date';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if (delivery_dates < purchase_date) {
+	    	$scope.error_message = 'Delivery Requested Date should be greater than or equal to the Purchase date';
+	        $scope.error_flag = true;
+	        return false;
+		} else if(delivery_dates_day_name == 'Sunday' || delivery_dates_day_name == 'Saturday') {
+	    	$scope.error_message = 'Entered Delivery Requested Date is a '+delivery_dates_day_name;
+	    	$scope.error_flag = true;
+	    	return false;
+	    } else if($scope.installation_requested_date == undefined || $scope.installation_requested_date == '' ) {
+	        $scope.error_message = 'Please Enter Installation Requested Date';
+	        $scope.error_flag = true;
+	        return false;
+	    } else if (installation_dates < delivery_dates) {
+	    	$scope.error_message = 'Installation Requested Date should be greater than or equal to the Delivery Requested Date';
+	        $scope.error_flag = true;
+	        return false;
+		} else if(installation_dates_day_name == 'Sunday' || installation_dates_day_name == 'Saturday') {
+	    	$scope.error_message = 'Entered Installation Requested Date is a '+installation_dates_day_name;
+	    	$scope.error_flag = true;
+	    	return false;
+	    } else if($scope.extra_man_power == undefined || $scope.extra_man_power == '' ) {
+	        $scope.error_message = 'Please Enter Extra Man Power';
+	        $scope.error_flag = true;
+	        return false;
+	    }
+	    return true;
+
+    }
+    $scope.edit_purchase_info = function(){
+    	$scope.is_valid = $scope.is_edit_purchase_form_valid();
+    	if ($scope.is_valid) {
+    		params = {
+		        'delivery_requested_date':$scope.delivery_requested_date,
+		        'installation_requested_date':$scope.installation_requested_date,
+		        'extra_man_power_request': $scope.extra_man_power,
+		        "csrfmiddlewaretoken" : $scope.csrf_token
+		    }
+		    $http({
+		        method : 'Post',
+		        url : "/purchase_info/"+$scope.purchase_id+"/",
+		        data : $.param(params),
+		        headers : {
+		        'Content-Type' : 'application/x-www-form-urlencoded'
+		        }
+		    }).success(function(data, status)
+		    {
+		        if(data.result == 'error'){
+		            $scope.error_message = data.message;
+		            $scope.error_flag = true;
+		        } 
+		        else {
 		            document.location.href = '/';
 		        }             
 		    }).error(function(data, status)
@@ -462,7 +583,6 @@ function HomeController($scope, $element, $http, $timeout, $location)
         $scope.csrf_token = csrf_token;  
     }
     $scope.search_purchase_info = function (){
-    	console.log($scope.delivery_order_number);
     	document.location.href ='/search_purchase_info/'+$scope.delivery_order_number+'/';
     }
 }

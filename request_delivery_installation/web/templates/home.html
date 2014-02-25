@@ -26,9 +26,9 @@
 						<th>Sl No</th>
 						<th>Date</th>
 						<th>Dealer PO Number</th>
-						<th>Dealer Name</th>
-						<th>Purchaser-In-Charge</th>
-						<th>Purchaser Sales Man</th>
+						<th>Dealer/Company Name</th>
+						<th>Dealer Purchaser</th>
+						<th>Dealer Sales Man</th>
 						<th>Brand</th>
 						<th>Model</th>
 						<th>View</th>
@@ -39,9 +39,9 @@
 								<th>{{purchase.slno}}</th>
 								<th>{{purchase.date}}</th>
 								<th>{{purchase.dealer_po_number}}</th>
-								<th>{{purchase.dealer_name}}</th>
-								<th>{{purchase.dealer_purchase_in_charge}}</th>
-								<th>{{purchase.purchaser_sales_man}}</th>
+								<th>{{purchase.dealer_company_name}}</th>
+								<th>{{purchase.dealer_purchaser}}</th>
+								<th>{{purchase.dealer_sales_man}}</th>
 								<th>{{purchase.brand}}</th>
 								<th>{{purchase.model}}</th>
 								<th><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></th>

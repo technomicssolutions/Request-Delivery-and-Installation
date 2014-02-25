@@ -82,7 +82,8 @@ class PurchaseInformation(Dates):
     delivery_requested_express_delivery = models.TextField('Delivery Requested Express Delivery', max_length=500)
     delivery_requested_date_change = models.IntegerField('Number of changes in Quantity and Delivery Date', default=0)
     installation_requested_date = models.DateField('Installation Requested Date')
-    installation_requested_express_delivery = models.TextField('Installation Requested Express Delivery', max_length=500)
+    date_change_charge = models.IntegerField('Date Change Charge', default=0)
+    delivery_requested_charge = models.IntegerField('Delivery Requested charge', default=0)
     extra_man_power_request = models.IntegerField('Extra Man Power Request', default=0)
     remarks = models.TextField('Remarks', null=True, blank=True)
 

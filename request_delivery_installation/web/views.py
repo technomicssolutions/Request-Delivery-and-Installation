@@ -153,7 +153,7 @@ class AddPurchanseInfo(View):
             purchase_info.slno = sl_no
             purchase_info.dealer_po_number = post_dict['dealer_po_number']
             purchase_info.delivery_order_number = post_dict['delivery_order_number']
-            purchase_info.dealer_name = post_dict['dealer_name']
+            purchase_info.dealer_company_name = post_dict['dealer_company_name']
             purchase_info.dealer_purchaser = post_dict['dealer_purchaser']
             purchase_info.dealer_sales_man = post_dict['dealer_sales_man']
             purchase_info.brand = post_dict['brand']
@@ -182,13 +182,22 @@ class AddPurchanseInfo(View):
                 delivery_date_diff = (delivery_date - purchase_date).days
             if delivery_date_diff < 3:
                 purchase_info.delivery_requested_express_delivery = 'Express delivery'
-                purchase_info.save()
-            year, month, day = purchase_info.installation_requested_date.split('-')
-            installation_requested_date = datetime.date(int(year), int(month), int(day))
-            installation_date_diff = (installation_requested_date - purchase_date).days
-            if delivery_date_diff < 3:
-                purchase_info.installation_requested_express_delivery = 'Express delivery'
-                purchase_info.save()
+            if delivery_date_diff == 0:
+                purchase_info.delivery_requested_charge = 400
+            elif delivery_date_diff == 1:
+                purchase_info.delivery_requested_charge = 200
+            elif delivery_date_diff == 2:
+                purchase_info.delivery_requested_charge = 100
+            else:
+                purchase_info.delivery_requested_charge = 0
+            purchase_info.date_change_charge = int(purchase_info.delivery_requested_date_change) * 30
+            purchase_info.save()
+            # year, month, day = purchase_info.installation_requested_date.split('-')
+            # installation_requested_date = datetime.date(int(year), int(month), int(day))
+            # installation_date_diff = (installation_requested_date - purchase_date).days
+            # if delivery_date_diff < 3:
+            #     purchase_info.installation_requested_express_delivery = 'Express delivery'
+            #     purchase_info.save()
             response = simplejson.dumps({'result': 'success', 'message': 'Successfully added'})
         except Exception as ex:
             response = simplejson.dumps({'result': 'error', 'message': str(ex)})
@@ -239,6 +248,7 @@ class PurchaseInfoView(View):
     def get(self, request, *args, **kwargs):
 
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
+        purchase_info.date = purchase_info.date.strftime('%Y-%m-%d')
         purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
         context = {
             'purchase': purchase_info,
@@ -246,6 +256,7 @@ class PurchaseInfoView(View):
         return render(request, 'view_purchase_info.html', context)
     def post(self, request, *args, **kwargs):
         post_dict = request.POST
+        print post_dict
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         try:
             purchase_info.extra_man_power_request = post_dict['extra_man_power_request']
@@ -258,13 +269,15 @@ class PurchaseInfoView(View):
                 delivery_date = purchase_detail.delivery_date
             year, month, day = post_dict['delivery_requested_date'].split('-')
             new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
-            
+            print new_delivery_requested_date
+            print delivery_date
             if delivery_date != new_delivery_requested_date:
                 quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
                 
                 year, month, day = quantity_delivery_date.delivery_date.split('-')
                 delivery_date = datetime.date(int(year), int(month), int(day))
                 delivery_date_diff = (delivery_date - purchase_date).days
+                print delivery_date_diff
                 if delivery_date_diff < 3:
                     purchase_info.delivery_requested_express_delivery = 'Express delivery'
                     purchase_info.save()
@@ -272,7 +285,16 @@ class PurchaseInfoView(View):
                     purchase_info.delivery_requested_express_delivery = ''
                 purchase_info.delivery_requested_date.clear()
                 purchase_info.delivery_requested_date_change = purchase_info.delivery_requested_date_change + 1
-                purchase_info.delivery_requested_date.add(quantity_delivery_date) 
+                purchase_info.delivery_requested_date.add(quantity_delivery_date)
+                if delivery_date_diff == 0:
+                    purchase_info.delivery_requested_charge = 400
+                elif delivery_date_diff == 1:
+                    purchase_info.delivery_requested_charge = 200
+                elif delivery_date_diff == 2:
+                    purchase_info.delivery_requested_charge = 100
+                else:
+                    purchase_info.delivery_requested_charge = 0
+                purchase_info.date_change_charge = int(purchase_info.delivery_requested_date_change) * 30
                 purchase_info.save()
             else:
                 purchase_info.delivery_requested_express_delivery = purchase_info.delivery_requested_express_delivery
@@ -280,20 +302,10 @@ class PurchaseInfoView(View):
             if purchase_info.installation_requested_date != post_dict['installation_requested_date']:
                 purchase_info.installation_requested_date = post_dict['installation_requested_date']
                 purchase_info.save() 
-                year, month, day = purchase_info.installation_requested_date.split('-')    
-                installation_requested_date = datetime.date(int(year), int(month), int(day))
-                installation_date_diff = (installation_requested_date - purchase_date).days
-                if installation_date_diff < 3:
-                    purchase_info.installation_requested_express_delivery = 'Express delivery'
-                    purchase_info.save()  
-                else:
-                    purchase_info.installation_requested_express_delivery = ''
                 purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j') 
-            else:
-                purchase_info.installation_requested_express_delivery = purchase_info.installation_requested_express_delivery 
-                purchase_info.save() 
             context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
+            print str(ex)
             context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}
         
         return render(request,'view_purchase_info.html', context)
@@ -304,10 +316,11 @@ class SearchPurchaseInfo(View):
 
         try:
             purchase_info = PurchaseInformation.objects.get(delivery_order_number=kwargs['delivery_order_number'])
+            purchase_info.date = purchase_info.date.strftime('%Y-%m-%d')
             purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
         except PurchaseInformation.DoesNotExist:
             purchase_info = None
-            message = 'No Purchase Information with this Delivery Ordeer Number is Available'
+            message = 'No Purchase Information with this Delivery Order Number is Available'
             context = {
                 'message': message
             }

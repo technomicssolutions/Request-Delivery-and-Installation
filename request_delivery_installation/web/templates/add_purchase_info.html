@@ -15,7 +15,7 @@
 				<form name="add_subdealer_content">{% csrf_token %}
 					<div class="formrow">
 						<div class="formtext">Date :</div>
-						<div class="forminput"><input type="text" name="date" value="{{date}}"></div>
+						<div class="forminput"><input type="text" id="date" name="date" value="{{date}}"></div>
 					</div>
 					<div class="formrow">
 						<div class="formtext">Dealer PO Number :</div>
@@ -27,7 +27,7 @@
 					</div>
 					<div class="formrow">
 						<div class="formtext">Dealer/Company Name :</div>
-						<div class="forminput"><input type="text" name="dealer_name" ng-model="dealer_name"></div>
+						<div class="forminput"><input type="text" name="dealer_company_name" ng-model="dealer_company_name"></div>
 					</div>
 					 <div class="formrow">
 						<div class="formtext">Dealer Purchaser :</div>
@@ -144,13 +144,13 @@
 					<div class="formrow">
 						<div class="formtext">Delivery Requested Date :</div>
 						<div class="forminput">
-							<input type="text" name="delivery_requested_date" ng-model="delivery_requested_date">
+							<input type="text" name="delivery_requested_date" id="delivery_date" placeholder="eg: yyyy-mm-dd">
 						</div>
 					</div>
 					<div class="formrow">
 						<div class="formtext">Installation Requested Date :</div>
 						<div class="forminput">
-							<input type="text" name="installation_requested_date" ng-model="installation_requested_date">
+							<input type="text" name="installation_requested_date" id="installation_date" placeholder="eg: yyyy-mm-dd">
 						</div>
 					</div>
 					<div class="formrow">
