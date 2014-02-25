@@ -160,12 +160,14 @@
 					<div class="sub_contents">
 						<label>Delivery Status : </label>
 						<span>{{purchase.delivered_status}}</span>
+						<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
 					</div>
 					{% endif %}
 				{% else %}
 					<div class="sub_contents">
 						<label>Delivery Status : </label>
 						<span>{{purchase.delivered_status}}</span>
+						<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
 					</div>
 					
 				{% endif %}
