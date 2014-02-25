@@ -17,6 +17,7 @@ function get_day_name(day) {
 }
 
 function convert_to_date(date_val) {
+	console.log(date_val);
 	var date_value = date_val.split('-');
 	var converted_date = new Date(date_value[0],date_value[1]-1, date_value[2]);
 	return converted_date;
@@ -544,10 +545,12 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     $scope.edit_purchase_info = function(){
     	$scope.is_valid = $scope.is_edit_purchase_form_valid();
     	if ($scope.is_valid) {
+    		$scope.delivery_status = $('#delivery_status').val();
     		params = {
 		        'delivery_requested_date':$scope.delivery_requested_date,
 		        'installation_requested_date':$scope.installation_requested_date,
 		        'extra_man_power_request': $scope.extra_man_power,
+		        'delivery_status': $scope.delivery_status,
 		        "csrfmiddlewaretoken" : $scope.csrf_token
 		    }
 		    $http({

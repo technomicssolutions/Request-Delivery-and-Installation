@@ -62,7 +62,7 @@ class PurchaseInformation(Dates):
     date = models.DateField('Date', null=True, blank=True)
     slno = models.CharField('Sl No', max_length=10, null=True, blank=True)
     dealer_po_number = models.CharField('Dealer PO Number', max_length=30)
-    delivery_order_number = models.CharField('Delivery Order Number', max_length=30, null=True, blank=True)
+    delivery_order_number = models.CharField('Delivery Order Number', max_length=30, null=True, blank=True, unique=True)
     dealer_company_name = models.CharField('Dealer/Company Name', max_length=30, null=True, blank=True)
     dealer_purchaser = models.CharField('Dealer Purchaser', max_length=30, null=True, blank=True)
     dealer_sales_man = models.CharField('Dealer Sales Man', max_length=30, null=True, blank=True)
@@ -84,6 +84,7 @@ class PurchaseInformation(Dates):
     installation_requested_date = models.DateField('Installation Requested Date')
     date_change_charge = models.IntegerField('Date Change Charge', default=0)
     delivery_requested_charge = models.IntegerField('Delivery Requested charge', default=0)
+    delivered_status = models.CharField('Delivery Status', null=True, blank=True, max_length=50)
     extra_man_power_request = models.IntegerField('Extra Man Power Request', default=0)
     remarks = models.TextField('Remarks', null=True, blank=True)
 

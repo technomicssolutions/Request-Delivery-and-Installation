@@ -170,6 +170,7 @@ class AddPurchanseInfo(View):
             purchase_info.mobile_number = post_dict['mobile_no']
             purchase_info.installation_requested_date = post_dict['installation_requested_date']
             purchase_info.extra_man_power_request = post_dict['extra_man_power']
+            purchase_info.delivered_status = 'Not Delivered'
             purchase_info.remarks = post_dict['remarks']
             purchase_info.save()
             quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=post_dict['delivery_requested_date'])
@@ -249,9 +250,18 @@ class PurchaseInfoView(View):
 
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         purchase_info.date = purchase_info.date.strftime('%Y-%m-%d')
+        current_date = datetime.datetime.now().date()
+        delivered_status = False
+        for purchase_detail in purchase_info.delivery_requested_date.all():
+            delivery_date = purchase_detail.delivery_date
+        if current_date >= delivery_date:
+            delivered_status = True
+        else:
+            delivered_status = False
         purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
         context = {
             'purchase': purchase_info,
+            'delivery_status': delivered_status
         }
         return render(request, 'view_purchase_info.html', context)
     def post(self, request, *args, **kwargs):
@@ -260,6 +270,7 @@ class PurchaseInfoView(View):
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         try:
             purchase_info.extra_man_power_request = post_dict['extra_man_power_request']
+            purchase_info.delivered_status = post_dict['delivery_status']
             quantity = ''
             delivery_date = ''
 
@@ -269,8 +280,6 @@ class PurchaseInfoView(View):
                 delivery_date = purchase_detail.delivery_date
             year, month, day = post_dict['delivery_requested_date'].split('-')
             new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
-            print new_delivery_requested_date
-            print delivery_date
             if delivery_date != new_delivery_requested_date:
                 quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
                 
@@ -318,6 +327,15 @@ class SearchPurchaseInfo(View):
             purchase_info = PurchaseInformation.objects.get(delivery_order_number=kwargs['delivery_order_number'])
             purchase_info.date = purchase_info.date.strftime('%Y-%m-%d')
             purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
+            current_date = datetime.datetime.now().date()
+            delivered_status = False
+            for purchase_detail in purchase_info.delivery_requested_date.all():
+                delivery_date = purchase_detail.delivery_date
+            if current_date >= delivery_date:
+                delivered_status = True
+            else:
+                delivered_status = False
+
         except PurchaseInformation.DoesNotExist:
             purchase_info = None
             message = 'No Purchase Information with this Delivery Order Number is Available'
@@ -325,8 +343,10 @@ class SearchPurchaseInfo(View):
                 'message': message
             }
             return render(request, 'home.html', context)
+        print 'delivery',purchase_info.delivered_status
         context = {
             'purchase': purchase_info,
+            'delivery_status': delivered_status
         }
         return render(request, 'view_purchase_info.html', context)
 
