@@ -84,7 +84,7 @@ class Signup(View):
             email=post_dict['email'], username=post_dict['username'])
             user.set_password(post_dict['password'])
             user.save()
-            userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'] )
+            userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'], dealer_company_name=post_dict['dealer_name'] )
             res = {'result': 'success', 'message': 'Loged in'}
         except Exception as ex:
             res = {'result': 'error', 'message': str(ex)}
@@ -131,7 +131,6 @@ class AddSubDealer(View):
 class AddPurchanseInfo(View):
     def get(self, request, *args, **kwargs):
         current_date = datetime.datetime.now().date()
-        print current_date
         context = {
             'date': current_date.strftime('%Y-%m-%d'),
         }
@@ -244,6 +243,7 @@ class FetchDealersList(View):
         status_code = 200
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 
+
 class PurchaseInfoView(View):
 
     def get(self, request, *args, **kwargs):
@@ -266,7 +266,6 @@ class PurchaseInfoView(View):
         return render(request, 'view_purchase_info.html', context)
     def post(self, request, *args, **kwargs):
         post_dict = request.POST
-        print post_dict
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         try:
             purchase_info.extra_man_power_request = post_dict['extra_man_power_request']
@@ -286,7 +285,6 @@ class PurchaseInfoView(View):
                 year, month, day = quantity_delivery_date.delivery_date.split('-')
                 delivery_date = datetime.date(int(year), int(month), int(day))
                 delivery_date_diff = (delivery_date - purchase_date).days
-                print delivery_date_diff
                 if delivery_date_diff < 3:
                     purchase_info.delivery_requested_express_delivery = 'Express delivery'
                     purchase_info.save()
@@ -314,7 +312,6 @@ class PurchaseInfoView(View):
                 purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%j') 
             context = {'result': 'success', 'message': 'Edited Successfully', 'purchase': purchase_info,}    
         except Exception as ex:
-            print str(ex)
             context = {'result': 'error', 'message': str(ex), 'purchase': purchase_info,}
         
         return render(request,'view_purchase_info.html', context)
@@ -343,12 +340,40 @@ class SearchPurchaseInfo(View):
                 'message': message
             }
             return render(request, 'home.html', context)
-        print 'delivery',purchase_info.delivered_status
         context = {
             'purchase': purchase_info,
             'delivery_status': delivered_status
         }
         return render(request, 'view_purchase_info.html', context)
+
+class FetchFirmNames(View):
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        ctx_dealers = []
+        if user.userprofile_set.all():
+            if user.userprofile_set.all()[0].user_type == 'customer/dealer':
+                response = simplejson.dumps({'result': 'sucess', 'dealer_company_names': user.userprofile_set.all()[0].dealer_company_name, 'is_dealer':True})
+                status_code = 200
+                return HttpResponse(response, status = status_code, mimetype = 'application/json')
+            else:
+                dealer_company_names =  PurchaseInformation.objects.all().values_list('dealer_company_name', flat = True).distinct()
+                if dealer_company_names.count() > 0:
+                    for dealer in dealer_company_names:
+                        ctx_dealers.append({
+                           'name': dealer
+                        })
+        else:
+            dealer_company_names =  PurchaseInformation.objects.all().values_list('dealer_company_name', flat = True).distinct()
+            if dealer_company_names.count() > 0:
+                for dealer in dealer_company_names:
+                    ctx_dealers.append({
+                       'name': dealer
+                    })
+
+        response = simplejson.dumps({'result': 'sucess', 'dealer_company_names': ctx_dealers, 'is_dealer':False})
+        status_code = 200
+        return HttpResponse(response, status = status_code, mimetype = 'application/json')
 
 
 

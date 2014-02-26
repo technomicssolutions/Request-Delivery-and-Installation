@@ -17,7 +17,6 @@ function get_day_name(day) {
 }
 
 function convert_to_date(date_val) {
-	console.log(date_val);
 	var date_value = date_val.split('-');
 	var converted_date = new Date(date_value[0],date_value[1]-1, date_value[2]);
 	return converted_date;
@@ -114,6 +113,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
 {
 	$scope.error_flag = false;
 	$scope.is_vendor = false;
+	$scope.is_dealer = false;
 	$scope.init = function(csrf_token)
     {
         $scope.csrf_token = csrf_token; 
@@ -122,9 +122,17 @@ function SignupController($scope, $element, $http, $timeout, $location)
     $scope.is_user_type_vendor = function(){
     	if ($scope.user_type == 'vendors') {
     		$scope.is_vendor = true;
+    		$scope.is_dealer = false;
+    	} else if ($scope.user_type == 'customer/dealer') {
+    		$scope.is_dealer = true;
+    		$scope.is_vendor = false;
     	} else {
     		$scope.is_vendor = false;
+    		$scope.is_dealer = false;
     	}
+    }
+    $scope.is_user_type_dealer = function(){
+    	
     }
     $scope.signup = function(){
     	$scope.is_valid = register_form_validation($scope);
@@ -137,6 +145,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
 		        'email': $scope.email,
 		        'user_type':$scope.user_type,
 		        'brand': $scope.brand,
+		        'dealer_name': $scope.dealer_company_name,
 		        "csrfmiddlewaretoken" : $scope.csrf_token
 		    }
 		    $http({
@@ -174,6 +183,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
 function AddSubDealerController($scope, $element, $http, $timeout, $location)
 {
 	$scope.error_flag = false;
+	$scope.is_dealer_customer = false;
 	$scope.init = function(csrf_token, user_id)
     {
         $scope.csrf_token = csrf_token;  
@@ -287,6 +297,26 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
             console.log(data || "Request failed");
         });  
         $scope.dealers_name = 'select';
+        $http.get('/fetch_dealer_company_names/').success(function(data)
+        {
+        	$scope.is_dealer_customer = data.is_dealer;
+            if (!(data.is_dealer)) {
+            	$scope.dealer_company_names = data.dealer_company_names;
+            	$scope.is_dealer_flag = false;
+            	$scope.not_dealer_flag = true;
+            	$scope.not_dealer_name = 'select';
+            } else {
+            	$scope.is_dealer_flag = true;
+            	$scope.firm_name = data.dealer_company_names;
+            	$scope.not_dealer_name = 'select';
+            }
+
+
+        }).error(function(data, status)
+        {
+            console.log(data || "Request failed");
+        });  
+        $scope.dealers_name = 'select';
     }
 
     $scope.add_new_brand_name = function(){
@@ -307,6 +337,13 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 			$scope.dealer_flag = false;
     	}
     }
+    $scope.add_new_firm = function() {
+    	if ($scope.not_dealer_name == 'others') {
+    		$scope.is_dealer_flag = true;
+			$scope.not_dealer_flag = false;
+			// $scope.firm_name = 
+    	}
+    }
     $scope.is_purchase_form_valid = function(){
     	$scope.date = $('#date').val();
     	$scope.delivery_requested_date = $('#delivery_date').val();
@@ -318,7 +355,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		var installation_dates = convert_to_date($('#installation_date').val());
 		var installation_dates_day_name = get_day_name(installation_dates.getDay());
 		var purchase_date = convert_to_date($('#date').val());
-		
 		if($scope.date == undefined || $scope.date == '') {
 	        $scope.error_message = 'Please Enter Date';
 	        $scope.error_flag = true;
@@ -331,11 +367,18 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Delivery Order Number';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if($scope.dealer_company_name == undefined || $scope.dealer_company_name == '') {
-	        $scope.error_message = 'Please Enter Dealer/Company Name';
+	    } 
+	    else if(($scope.not_dealer_name == undefined || $scope.not_dealer_name == '' || $scope.not_dealer_name == '? undefined:undefined ?' || (($scope.not_dealer_name == 'select' ) && ($scope.firm_name == undefined || $scope.firm_name == ''))) || (($scope.not_dealer_name == 'others')&&($scope.firm_name == undefined || $scope.firm_name == '')) || (($scope.is_dealer_flag==true && ($scope.firm_name == undefined || $scope.firm_name == '')))) {
+	        $scope.error_message = 'Please Choose or Add Dealer/Company Name';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || (($scope.dealers_name == 'select' ) && ($scope.new_dealer == undefined || $scope.new_dealer == ''))) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
+	    }
+	    // else if($scope.dealer_company_name == undefined || $scope.dealer_company_name == '') {
+	    //     $scope.error_message = 'Please Enter Dealer/Company Name';
+	    //     $scope.error_flag = true;
+	    //     return false;
+	    // } 
+	    else if(($scope.dealers_name == undefined || $scope.dealers_name == '' || $scope.dealers_name == '? undefined:undefined ?' || (($scope.dealers_name == 'select' ) && ($scope.new_dealer == undefined || $scope.new_dealer == ''))) || (($scope.dealers_name == 'others')&&($scope.new_dealer == undefined || $scope.new_dealer == ''))) {
 	        $scope.error_message = 'Please Choose or Add Dealer Purchaser';
 	        $scope.error_flag = true;
 	        return false;
@@ -448,7 +491,12 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		    } else {
 		    	$scope.dealer_purchaser = $scope.dealers_name;
 		    }
-    		params = {
+		    if ($scope.is_dealer_customer || $scope.not_dealer_name == 'others' || $scope.not_dealer_name == 'select') {
+				$scope.dealer_company_name = $scope.firm_name;
+			} else {
+				$scope.dealer_company_name = $scope.not_dealer_name;
+			}
+			params = {
 		    	'date': $scope.date,
 		    	'dealer_po_number': $scope.dealer_po_number,
 		    	'delivery_order_number': $scope.delivery_order_number,

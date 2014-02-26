@@ -49,6 +49,12 @@
 						<input type="text" name="brand" ng-model="brand">
 					</div>
 				</div>
+				<div class="sub_contents">
+					<div ng-show="is_dealer">
+						<label>Dealer/Company Name</label>
+						<input type="text" name="dealer_company_name" ng-model="dealer_company_name">
+					</div>
+				</div>
 				<p ng-show="error_flag" class="error_msg">[[error_message]]</p><br>
 				<div class="sub_contents">
 					<div class="buttons">

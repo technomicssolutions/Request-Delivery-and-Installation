@@ -19,6 +19,7 @@ class UserProfile(Dates):
     user = models.ForeignKey(User)
     user_type = models.CharField('User Type', null=True, blank=True, max_length=20, choices=USER_TYPE_CHOICES)
     brand_name = models.CharField('Brand', null=True, blank=True, max_length=30)
+    dealer_company_name = models.CharField('Dealer/Firm name', null=True, blank=True, max_length=50)
 
     def get_name(self):
         if self.user.first_name and self.user.last_name:
