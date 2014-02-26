@@ -86,10 +86,10 @@
 					<label>Postal Code: </label>
 					<span name="address" readonly>{{purchase.postal_code}}</span>
 				</div>
-				<div class="sub_contents">
+				<!-- <div class="sub_contents">
 					<label>Email: </label>
 					<span name="address" readonly>{{purchase.email}}</span>
-				</div>
+				</div> -->
 				{% for delivery_details in purchase.delivery_requested_date.all%}
 					<div class="sub_contents">
 						<label>Quantity : </label>

@@ -106,6 +106,12 @@ function register_form_validation($scope) {
 	        $scope.error_flag = true;
 	        return false;
     	} 
+    } else if($scope.user_type == 'customer/dealer') {
+    	if ($scope.dealer_company_name == '' || $scope.dealer_company_name == undefined) {
+    		$scope.error_message = 'Please Enter Dealer Company Name';
+	        $scope.error_flag = true;
+	        return false;
+    	} 
     } 
     return true;
 }
@@ -430,11 +436,13 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    	$scope.error_message = 'Please Enter Postal Code';
 	        $scope.error_flag = true;
 	        return false;
-	    } else if (!(validateEmail($scope.email))) {
-	    	$scope.error_message = 'Please Enter Email';
-	        $scope.error_flag = true;
-	        return false;
-	    } else if($scope.quantity == undefined || $scope.quantity == '' ) {
+	    } 
+	    // else if (!(validateEmail($scope.email))) {
+	    // 	$scope.error_message = 'Please Enter Email';
+	    //     $scope.error_flag = true;
+	    //     return false;
+	    // } 
+	    else if($scope.quantity == undefined || $scope.quantity == '' ) {
 	        $scope.error_message = 'Please Enter Quantity';
 	        $scope.error_flag = true;
 	        return false;
@@ -512,7 +520,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        'building_name': $scope.building_name,
 		        'street_name': $scope.street_name,
 		        'postal_code': $scope.postal_code,
-		        'email': $scope.email,
 		        'telephone_no': $scope.telephone_no,
 		        'mobile_no': $scope.mobile_no,
 		        'quantity':$scope.quantity,

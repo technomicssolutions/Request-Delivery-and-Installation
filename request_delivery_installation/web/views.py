@@ -130,7 +130,9 @@ class AddSubDealer(View):
 
 class AddPurchanseInfo(View):
     def get(self, request, *args, **kwargs):
+        print datetime.datetime.now()
         current_date = datetime.datetime.now().date()
+        print current_date
         context = {
             'date': current_date.strftime('%Y-%m-%d'),
         }
@@ -164,7 +166,7 @@ class AddPurchanseInfo(View):
             purchase_info.building_name = post_dict['building_name']
             purchase_info.street_name = post_dict['street_name']
             purchase_info.postal_code = post_dict['postal_code']
-            purchase_info.email = post_dict['email']
+            # purchase_info.email = post_dict['email']
             purchase_info.telephone_number = post_dict['telephone_no']
             purchase_info.mobile_number = post_dict['mobile_no']
             purchase_info.installation_requested_date = post_dict['installation_requested_date']
