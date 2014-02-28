@@ -3,7 +3,7 @@
 {% endblock title %}
 {% block body_id %}view_purchase_info{% endblock %}"  
 {% block controller %}
-  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '{{purchase.id}}')"   
+  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '{{user.userprofile_set.all.0.user_type}}','{{purchase.id}}')"   
 {% endblock controller %}
 {% block content %}
 
@@ -13,175 +13,16 @@
 		<div class="form_content">
 			<h2>Purchase No : {{purchase.slno}}</h2>
 			<form name="add_subdealer_content" method="post">{% csrf_token %}
-				<div class="sub_contents">
-					<label>Created By : </label>
-					<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Date : </label>
-					<span>{{purchase.date}}</span>
-					<input type="hidden" id="date" name="date" value="{{purchase.date}}">
-				</div>
-				<div class="sub_contents">
-					<label>Dealer PO Number : </label>
-					<span>{{purchase.dealer_po_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Delivery Order Number : </label>
-					<span>{{purchase.delivery_order_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Dealer/Company Name : </label>
-					<span>{{purchase.dealer_company_name}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Dealer Purchaser : </label>
-					<span>{{purchase.dealer_purchaser}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Dealer Sales Man : </label>
-					<span>{{purchase.dealer_sales_man}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Brand : </label>
-					<span>{{purchase.brand}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Model : </label>
-					<span>{{purchase.model}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Customer : </label>
-					<span>{{purchase.customer}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Telephone Number: </label>
-					<span name="address" readonly>{{purchase.telephone_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Mobile Number: </label>
-					<span name="address" readonly>{{purchase.mobile_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Block/House Number: </label>
-					<span name="address" readonly>{{purchase.block_house_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Floor Number : </label>
-					<span>{{purchase.floor_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Unit Number: </label>
-					<span name="address" readonly>{{purchase.unit_number}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Building Name: </label>
-					<span name="address" readonly>{{purchase.building_name}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Street Name: </label>
-					<span name="address" readonly>{{purchase.street_name}}</span>
-				</div>
-				<div class="sub_contents">
-					<label>Postal Code: </label>
-					<span name="address" readonly>{{purchase.postal_code}}</span>
-				</div>
-				<!-- <div class="sub_contents">
-					<label>Email: </label>
-					<span name="address" readonly>{{purchase.email}}</span>
-				</div> -->
-				{% for delivery_details in purchase.delivery_requested_date.all%}
-					<div class="sub_contents">
-						<label>Quantity : </label>
-						<span>{{delivery_details.quantity}}</span>
-					</div>
-					<div class="sub_contents">
-						<label>Delivery Requested Date : </label>
-						{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
-							<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" id="delivery_date" ><br>
-						{% else %}
-							<span> {{delivery_details.delivery_date}} </span>
-							<input type="hidden" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" id="delivery_date" ><br>
-						{% endif %}
-					</div>
-				{% endfor %}
-				{% if purchase.delivery_requested_express_delivery%}
-					<div class="sub_contents">
-						<label>Express Delivery : </label>
-						<span>{{purchase.delivery_requested_express_delivery}}</span>
-					</div>
-					<div class="sub_contents">
-						<label>Express Delivery Charge : </label>
-						<span>{{purchase.delivery_requested_charge}} $</span>
-					</div>
-				{% endif %}
-				<div class="sub_contents">
-					<label>Installation Requested Date : </label>
-					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser%}
-						<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
-					{% else %}
-						<span> {{purchase.installation_requested_date}} </span>
-						<input type="hidden" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
-					{% endif %}
-				</div>
-				<div class="sub_contents">
-					<label>Change Charge : </label>
-					<span>{{purchase.date_change_charge}} $</span>
-				</div>
-				<div class="sub_contents">
-					<label>Extra Man Power : </label>
-					{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
-						<input type="text" name="extra_man_power_request" value="{{purchase.extra_man_power_request}}" id="extra_man_power"><br>
-					{% else %}
-						<span>{{purchase.extra_man_power_request}}</span>
-						<input type="hidden" name="extra_man_power_request" value="{{purchase.extra_man_power_request}}" id="extra_man_power"><br>
-					{% endif %}
-					
-				</div>
-				<div class="sub_contents">
-					<label>Remarks : </label>
-					<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
-				</div>
-				{% if user.userprofile_set.all.0.user_type == 'internal_technician' or user.is_superuser %}
-					{% if delivery_status %}
-						<div class="sub_contents">
-							<label>Delivery Status : </label>
-							<input type="text" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
-						</div>
-						<div class="sub_contents">
-						<div class="buttons">
-							<input type="submit" value="Save" ng-click="edit_purchase_info()">
-						</div>
-					</div>
-					<div class="sub_contents">
-						<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
-					</div>
-					{% else %}
-					<div class="sub_contents">
-						<label>Delivery Status : </label>
-						<span>{{purchase.delivered_status}}</span>
-						<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
-					</div>
-					{% endif %}
-				{% else %}
-					<div class="sub_contents">
-						<label>Delivery Status : </label>
-						<span>{{purchase.delivered_status}}</span>
-						<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
-					</div>
-					
-				{% endif %}
-
-				
-				{% if user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser%}
-					<div class="sub_contents">
-						<div class="buttons">
-							<input type="submit" value="Save" ng-click="edit_purchase_info()">
-						</div>
-					</div>
-					<div class="sub_contents">
-						<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
-					</div>
+				{% if user.userprofile_set.all.0.user_type == 'clerk' %}
+					{% include 'purchase_info_clerk_view.html' %}
+				{% elif user.userprofile_set.all.0.user_type == 'customer/dealer' %}
+					{% include 'purchase_info_customer_dealer_view.html'%}
+				{% elif user.is_superuser %}
+					{% include 'purchase_info_admin_view.html'%}
+				{% elif user.userprofile_set.all.0.user_type == 'internal_technician' %}
+					{% include 'purchase_info_internal_technician_view.html'%}
+				{% elif user.userprofile_set.all.0.user_type == 'vendors' %}
+					{% include 'purchase_info_vendors_view.html'%}
 				{% endif %}
 			</form>
 	</div>

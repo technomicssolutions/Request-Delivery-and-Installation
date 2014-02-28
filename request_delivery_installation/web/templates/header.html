@@ -4,7 +4,7 @@
 			<a href="{% url 'register' %}">Register New User</a>
 		{% endif %}
 		<a href="{% url 'home' %}">Purchase Details</a>
-		{% if user.userprofile_set.all.0.user_type == 'sales_executive' or user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
+		{% if user.userprofile_set.all.0.user_type == 'clerk' or user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
 			<a href="{% url 'add_purchase_info' %}">Add Purchase Info</a>
 		{% endif %}
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
@@ -13,6 +13,10 @@
 		<a href="{% url 'logout' %}">Logout</a>
 	</div>
 	<div class="nav_left">
-		<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
+		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
+			<p>Welcome {{ user.userprofile_set.all.0.dealer_company_name }} Logged in : {{ user.first_name }} {{ user.last_name }}</p>
+		{% else %}
+			<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
+		{% endif %}
 	</div>	
 </div>

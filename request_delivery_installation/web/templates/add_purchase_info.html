@@ -2,7 +2,7 @@
 {% block title %}Add Purchase Info
 {% endblock title %}
 {% block controller %}
-  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '')"   
+  ng-controller="AddEditPurchaseInfoController" ng-init="init('{{csrf_token}}', '{{user.id}}', '{{user.userprofile_set.all.0.user_type}}', '')"   
 {% endblock controller %}
 {% block body_id %}add_purchase_info{% endblock %}"  
 	
@@ -10,7 +10,7 @@
 	<div class="contents">
 		{% include 'header.html' %}
 		<div class="add_subdealer"> 
-			<h1>Add Purchase Info</h1>
+			<h1>Add New Purchase Info Order</h1>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
 					<div class="formrow">

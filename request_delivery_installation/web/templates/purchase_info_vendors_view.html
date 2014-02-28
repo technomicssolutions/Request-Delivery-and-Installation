@@ -1,0 +1,135 @@
+<div class="sub_contents">
+	<label>Created By : </label>
+	<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
+</div>
+<div class="sub_contents">
+	<label>Date : </label>
+	<span>{{purchase.date}}</span>
+</div>
+<div class="sub_contents">
+	<label>Dealer PO Number : </label>
+	<span>{{purchase.dealer_po_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Delivery Order Number : </label>
+	<span>{{purchase.delivery_order_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Dealer/Company Name : </label>
+	<span>{{purchase.dealer_company_name}}</span>
+</div>
+<div class="sub_contents">
+	<label>Dealer Purchaser : </label>
+	<span>{{purchase.dealer_purchaser}}</span>
+</div>
+<div class="sub_contents">
+	<label>Dealer Sales Man : </label>
+	<span>{{purchase.dealer_sales_man}}</span>
+</div>
+<div class="sub_contents">
+	<label>Brand : </label>
+	<span>{{purchase.brand}}</span>
+</div>
+<div class="sub_contents">
+	<label>Model : </label>
+	<span>{{purchase.model}}</span>
+</div>
+<div class="sub_contents">
+	<label>Customer : </label>
+	<span>{{purchase.customer}}</span>
+</div>
+<div class="sub_contents">
+	<label>Telephone Number: </label>
+	<span name="address" readonly>{{purchase.telephone_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Mobile Number: </label>
+	<span name="address" readonly>{{purchase.mobile_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Block/House Number: </label>
+	<span name="address" readonly>{{purchase.block_house_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Floor Number : </label>
+	<span>{{purchase.floor_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Unit Number: </label>
+	<span name="address" readonly>{{purchase.unit_number}}</span>
+</div>
+<div class="sub_contents">
+	<label>Building Name: </label>
+	<span name="address" readonly>{{purchase.building_name}}</span>
+</div>
+<div class="sub_contents">
+	<label>Street Name: </label>
+	<span name="address" readonly>{{purchase.street_name}}</span>
+</div>
+<div class="sub_contents">
+	<label>Postal Code: </label>
+	<span name="address" readonly>{{purchase.postal_code}}</span>
+</div>
+{% for delivery_details in purchase.delivery_requested_date.all%}
+	
+	<div class="sub_contents">
+		<label>Quantity : </label>
+		<span>{{delivery_details.quantity}}</span>
+	</div>
+	<div class="sub_contents">
+		<label>Delivery Requested Date : </label>
+		<span> {{delivery_details.delivery_date}} </span>
+			<br>
+	</div>
+{% endfor %}
+{% if purchase.delivery_requested_express_delivery%}
+	<div class="sub_contents">
+		<label>Express Delivery : </label>
+		<span>{{purchase.delivery_requested_express_delivery}}</span>
+	</div>
+	<div class="sub_contents">
+		<label>Express Delivery Charge : </label>
+		<span>{{purchase.delivery_requested_charge}} $</span>
+	</div>
+{% endif %}
+<div class="sub_contents">
+	<label>Delivery Date Change Charge : </label>
+	<span>{{purchase.delivery_requested_date_change_charge}} $</span>
+</div>
+<div class="sub_contents">
+	<label>Delivery Status : </label>
+	<span>{{purchase.get_delivered_status}}</span>
+	<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
+</div>
+<div class="sub_contents">
+	<label>Installation Requested Date : </label>
+	<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
+</div>
+{% if purchase.installation_requested_express_delivery%}
+	<div class="sub_contents">
+		<label>Express Delivery : </label>
+		<span>{{purchase.installation_requested_express_delivery}}</span>
+	</div>
+	<div class="sub_contents">
+		<label>Express Delivery Charge : </label>
+		<span>{{purchase.installation_requested_charge}} $</span>
+	</div>
+{% endif %}
+<div class="sub_contents">
+	<label>Installation Date Change Charge : </label>
+	<span>{{purchase.installation_requested_date_change_charge}} $</span>
+</div>
+<div class="sub_contents">
+	<label>Installed Status : </label>
+	<span>{{purchase.get_installed_status}}</span>
+	<input type="hidden" name="installed_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
+</div>
+<div class="sub_contents">
+	<label>Extra Man Power : </label>
+	<span>{{purchase.extra_man_power_request}}</span>
+</div>
+<div class="sub_contents">
+	<label>Remarks : </label>
+	<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
+</div>
+	

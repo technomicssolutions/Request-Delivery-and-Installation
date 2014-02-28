@@ -1,0 +1,169 @@
+<div class="sub_contents">
+	<label>Created By : </label>
+	<span>{{purchase.created_by.first_name}} {{purchase.created_by.first_name}}</span>
+</div>
+<div class="sub_contents">
+	<label>Date : </label>
+	<span>{{purchase.date}}</span>
+	<input type="hidden" id="date" name="date" value="{{purchase.date}}">
+</div>
+<div class="sub_contents">
+	<label>Dealer PO Number : </label>
+	<input type="text" name="delivery_po_number" id="delivery_po_number" value="{{purchase.dealer_po_number}}">
+</div>
+<div class="sub_contents">
+	<label>Delivery Order Number : </label>
+	<input type="text" name="delivery_order_number" id="delivery_order_number" value="{{purchase.delivery_order_number}}">
+</div>
+
+<div class="sub_contents">
+	<label>Dealer/Company Name : </label>
+	<input type="text" name="dealer_company_name" id="dealer_company_name" value="{{purchase.dealer_company_name}}">
+</div>
+<div class="sub_contents">
+	<label>Dealer Purchaser : </label>
+	<input type="text" name="dealer_purchaser" id="dealer_purchaser" value="{{purchase.dealer_purchaser}}">
+</div>
+<div class="sub_contents">
+	<label>Dealer Sales Man : </label>
+	<input type="text" name="dealer_sales_man" id="dealer_sales_man" value="{{purchase.dealer_sales_man}}">
+</div>
+<div class="sub_contents">
+	<label>Brand : </label>
+	<input type="text" name="brand" id="brand" value="{{purchase.brand}}">
+</div>
+<div class="sub_contents">
+	<label>Model : </label>
+	<input type="text" name="model" id="model" value="{{purchase.model}}">
+</div>
+<div class="sub_contents">
+	<label>Customer : </label>
+	<input type="text" name="customer" id="customer" value="{{purchase.customer}}">
+</div>
+<div class="sub_contents">
+	<label>Telephone Number: </label>
+	<input type="text" name="telephone_number" id="telephone_number" value="{{purchase.telephone_number}}">
+</div>
+<div class="sub_contents">
+	<label>Mobile Number: </label>
+	<input type="text" name="mobile_number" id="mobile_number" value="{{purchase.mobile_number}}">
+</div>
+<div class="sub_contents">
+	<label>Block/House Number: </label>
+	<input type="text" name="block_house_number" id="block_house_number" value="{{purchase.block_house_number}}">	
+</div>
+<div class="sub_contents">
+	<label>Floor Number : </label>
+	<input type="text" name="floor_number" id="floor_number" value="{{purchase.floor_number}}">
+</div>
+<div class="sub_contents">
+	<label>Unit Number: </label>
+	<input type="text" name="unit_number" id="unit_number" value="{{purchase.unit_number}}">
+</div>
+<div class="sub_contents">
+	<label>Building Name: </label>
+	<input type="text" name="building_name" id="building_name" value="{{purchase.building_name}}">
+</div>
+<div class="sub_contents">
+	<label>Street Name: </label>
+	<input type="text" name="street_name" id="street_name" value="{{purchase.street_name}}">
+</div>
+<div class="sub_contents">
+	<label>Postal Code: </label>
+	<input type="text" name="postal_code" id="postal_code" value="{{purchase.postal_code}}">
+</div>
+{% for delivery_details in purchase.delivery_requested_date.all%}
+	<div class="sub_contents">
+		<label>Quantity : </label>
+		<input type="text" name="quantity" id="quantity" value="{{delivery_details.quantity}}">
+	</div>
+	<div class="sub_contents">
+		<label>Delivery Requested Date : </label>
+		<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" id="delivery_date" ><br>
+	</div>
+{% endfor %}
+{% if purchase.delivery_requested_express_delivery%}
+	<div class="sub_contents">
+		<label>Express Delivery : </label>
+		<span>{{purchase.delivery_requested_express_delivery}}</span>
+	</div>
+	<div class="sub_contents">
+		<label>Express Delivery Charge : </label>
+		<span>{{purchase.delivery_requested_charge}} $</span>
+	</div>
+{% endif %}
+<div class="sub_contents">
+	<label>Delivery Date Change Charge : </label>
+	<span>{{purchase.delivery_requested_date_change_charge}} $</span>
+</div>
+
+{% if delivery_status %}
+	<div class="sub_contents">
+		<label>Delivery Status : </label>
+		<select id="delivery_status">
+			<option value="pending" {%if purchase.delivered_status == "pending"%}selected="true"{%endif%}>Pending</option>
+			<option value="delivery_confirmed" {%if purchase.delivered_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+			<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+		</select>
+	</div>
+{% else %}
+	<div class="sub_contents">
+		<label>Delivery Status : </label>
+		<span>{{purchase.get_delivered_status}}</span>
+		<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
+	</div>
+{% endif %}
+
+<div class="sub_contents">
+	<label>Installation Requested Date : </label>
+	<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
+</div>
+{% if purchase.installation_requested_express_delivery%}
+	<div class="sub_contents">
+		<label>Express Delivery : </label>
+		<span>{{purchase.installation_requested_express_delivery}}</span>
+	</div>
+	<div class="sub_contents">
+		<label>Express Delivery Charge : </label>
+		<span>{{purchase.installation_requested_charge}} $</span>
+	</div>
+{% endif %}
+<div class="sub_contents">
+	<label>Installation Date Change Charge : </label>
+	<span>{{purchase.installation_requested_date_change_charge}} $</span>
+</div>
+{% if installed_status %}
+	<div class="sub_contents">
+		<label>Installed Status : </label>
+		<select id="installed_status">
+			<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
+			<option value="delivery_confirmed" {%if purchase.installed_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+			<option value="completed" {%if purchase.installed_status == "completed"%}selected="true"{%endif%}>Completed</option>
+		</select>
+		
+	</div>
+{% else %}
+	<div class="sub_contents">
+		<label>Installed Status : </label>
+		<span>{{purchase.get_installed_status}}</span>
+		<input type="hidden" name="installed_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
+	</div>
+{% endif %}
+
+<div class="sub_contents">
+	<label>Extra Man Power : </label>
+	<input type="text" name="extra_man_power_request" value="{{purchase.extra_man_power_request}}" id="extra_man_power"><br>	
+</div>
+<div class="sub_contents">
+	<label>Remarks : </label>
+	<input type="text" name="remarks" id="remarks" value="{{purchase.remarks}}">
+</div>
+
+<div class="sub_contents">
+	<div class="buttons">
+		<input type="submit" value="Save" ng-click="edit_purchase_info()">
+	</div>
+</div>
+<div class="sub_contents">
+	<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
+</div>
