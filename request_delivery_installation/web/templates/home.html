@@ -11,45 +11,44 @@
 		{% include 'header.html' %}
 		<div class="subcontents">
 			{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
-				{% if message %}
-					<p class="error_message"> {{message}} </p>
-				{% endif %}
-					<div>
-						Please enter Delivery Order Number
-						<input type="text" name="delivery_order_number" ng-model="delivery_order_number">
-						<a href="#" ng-click="search_purchase_info()">Search</a>
-					</div>
-				
+				{% include 'puchase_info_list_view_customer_dealer.html' %}
+			{% elif user.userprofile_set.all.0.user_type == 'vendors' %}
+				{% include 'puchase_info_list_view_vendors.html' %}
+			{% elif user.userprofile_set.all.0.user_type == 'clerk' %}
+				{% include 'puchase_info_list_view_clerk.html' %}
+			{% elif user.userprofile_set.all.0.user_type == 'internal_technician' %}
+				{% include 'puchase_info_list_view_internal_technician.html' %}
 			{% else %}
-				<table border="0" class="subcontent_table" cellspacing="0">
-					<tr>
-						<th>Sl No</th>
-						<th>Date</th>
-						<th>Dealer PO Number</th>
-						<th>Dealer/Company Name</th>
-						<th>Dealer Purchaser</th>
-						<th>Dealer Sales Man</th>
-						<th>Brand</th>
-						<th>Model</th>
-						<th>View</th>
-					</tr>
-					{% if purchases %}
-						{% for purchase in purchases %}
-							<tr class="{% cycle 'odd' 'even' %}">
-								<th>{{purchase.slno}}</th>
-								<th>{{purchase.date}}</th>
-								<th>{{purchase.dealer_po_number}}</th>
-								<th>{{purchase.dealer_company_name}}</th>
-								<th>{{purchase.dealer_purchaser}}</th>
-								<th>{{purchase.dealer_sales_man}}</th>
-								<th>{{purchase.brand}}</th>
-								<th>{{purchase.model}}</th>
-								<th><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></th>
-							</tr>	
-						{% endfor %}
-					{% endif %}
-				</table>
+					<table border="0" class="subcontent_table" cellspacing="0">
+						<tr>
+							<th>Sl No</th>
+							<th>Date</th>
+							<th>Dealer PO Number</th>
+							<th>Dealer/Company Name</th>
+							<th>Dealer Purchaser</th>
+							<th>Dealer Sales Man</th>
+							<th>Brand</th>
+							<th>Model</th>
+							<th>View</th>
+						</tr>
+						{% if purchases %}
+							{% for purchase in purchases %}
+								<tr class="{% cycle 'odd' 'even' %}">
+									<td>{{purchase.slno}}</td>
+									<td>{{purchase.date}}</td>
+									<td>{{purchase.dealer_po_number}}</td>
+									<td>{{purchase.dealer_company_name}}</td>
+									<td>{{purchase.dealer_purchaser}}</td>
+									<td>{{purchase.dealer_sales_man}}</td>
+									<td>{{purchase.brand}}</td>
+									<td>{{purchase.model}}</td>
+									<td><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></td>
+								</tr>	
+							{% endfor %}
+						{% endif %}
+					</table>
 			{% endif %}
+			
 		</div>
 	</div>
 {% endblock content%}

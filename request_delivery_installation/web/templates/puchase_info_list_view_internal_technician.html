@@ -1,0 +1,29 @@
+<table border="0" class="subcontent_table" cellspacing="0">
+	<tr>
+		<th>Installation Date</th>
+		<th>Installation Status</th>
+		<th>Customer Address</th>
+		<th>Delivery Date</th>
+		<th>Delivery Status</th>
+		<th>View</th>
+	</tr>
+	{% if purchases %}
+		{% for purchase in purchases %}
+			<tr class="{% cycle 'odd' 'even' %}">
+				<td>{{purchase.installation_requested_date}}</td>
+				{% if purchase.installed_status %}
+					<td>{{purchase.get_installed_status}}</td>
+				{% else %}
+					<td>&nbsp;</td>
+				{% endif %}
+				<td>{{purchase.block_house_number}}, {{purchase.floor_number}}, {{purchase.unit_number}}, {{purchase.building_name}}, {{purchase.street_name}}, {{purchase.postal_code}}</td>
+				{% for delivery_details in purchase.delivery_requested_date.all%}
+					<td>{{delivery_details.delivery_date}}</td>
+				{% endfor %}
+				<td>{{purchase.get_delivered_status}}</td>
+				
+				<td><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></td>
+			</tr>	
+		{% endfor %}
+	{% endif %}
+</table>

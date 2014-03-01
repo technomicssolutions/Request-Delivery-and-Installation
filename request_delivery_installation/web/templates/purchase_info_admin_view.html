@@ -109,7 +109,11 @@
 {% else %}
 	<div class="sub_contents">
 		<label>Delivery Status : </label>
-		<span>{{purchase.get_delivered_status}}</span>
+		{% if purchase.delivered_status %}
+			<span>{{purchase.get_delivered_status}}</span>
+		{% else %}
+			<span>&nbsp;</span>
+		{% endif %}
 		<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
 	</div>
 {% endif %}
@@ -145,7 +149,11 @@
 {% else %}
 	<div class="sub_contents">
 		<label>Installed Status : </label>
-		<span>{{purchase.get_installed_status}}</span>
+		{% if purchase.installed_status %}
+			<span>{{purchase.get_installed_status}}</span>
+		{% else %}
+			<span>&nbsp;</span>
+		{% endif %}
 		<input type="hidden" name="installed_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
 	</div>
 {% endif %}
@@ -166,4 +174,14 @@
 </div>
 <div class="sub_contents">
 	<p ng-show="error_flag" class="error_msg">[[error_message]]</p>
+</div>
+<div class="formrow" ng-show="is_express_delivery">
+	<div class="formtext"></div>
+	<div class="forminput">
+		<p class="messages" ng-show="express_delivery_msg">[[express_delivery_msg]]</p>
+		<p class="messages" ng-show="express_installation_delivery_msg">[[express_installation_delivery_msg]]</p>
+		Do you want to continue ?
+		<a href="" ng-click="edit_save_purchase_info('yes')">Yes</a>
+		<a href="" ng-click="edit_save_purchase_info('no')">No</a>
+	</div>
 </div>

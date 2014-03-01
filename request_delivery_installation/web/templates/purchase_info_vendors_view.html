@@ -98,12 +98,17 @@
 </div>
 <div class="sub_contents">
 	<label>Delivery Status : </label>
-	<span>{{purchase.get_delivered_status}}</span>
+	{% if purchase.delivered_status %}
+		<span>{{purchase.get_delivered_status}}</span>
+	{% else %}
+		<span>&nbsp;</span>
+	{% endif %}
 	<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
 </div>
 <div class="sub_contents">
 	<label>Installation Requested Date : </label>
-	<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
+	<span>{{purchase.installation_requested_date}}</span>
+	<input type="hidden" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date"><br>
 </div>
 {% if purchase.installation_requested_express_delivery%}
 	<div class="sub_contents">
@@ -121,7 +126,11 @@
 </div>
 <div class="sub_contents">
 	<label>Installed Status : </label>
-	<span>{{purchase.get_installed_status}}</span>
+	{% if purchase.installed_status %}
+		<span>{{purchase.get_installed_status}}</span>
+	{% else %}
+		<span>&nbsp;</span>
+	{% endif %}
 	<input type="hidden" name="installed_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
 </div>
 <div class="sub_contents">

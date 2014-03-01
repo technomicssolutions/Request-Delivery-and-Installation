@@ -21,7 +21,11 @@ class Home(View):
                 brand = user.userprofile_set.all()[0].brand_name
                 current_date = datetime.datetime.now()
                 last_two_months = current_date - datetime.timedelta(days=3*30)
-                purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months, brand=brand)
+                purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months, brand=brand).order_by('-date')
+            elif user.userprofile_set.all()[0].user_type == 'clerk':
+                purchase_info = PurchaseInformation.objects.all().order_by('slno')
+            elif user.userprofile_set.all()[0].user_type == 'internal_technician':
+                purchase_info = PurchaseInformation.objects.all().order_by('installation_requested_date')
             else:
                purchase_info = PurchaseInformation.objects.all() 
         else:
@@ -46,23 +50,59 @@ class Login(View):
         try:
             post_data = request.POST
             user = authenticate(username=str(post_data['username']), password=post_data['password'])
-            
             if user is not None:
                 if user.is_active:
-                    login(request, user)
-                    res = {'result': 'success', 'message': 'Loged in'}
+                    if user.is_superuser:
+                        login(request, user)
+                        res = {'result': 'success', 'message': 'Loged in'}
+                    if user.userprofile_set.all(): 
+                        userprofile = user.userprofile_set.all()[0]
+                        if userprofile.login_locked:
+                            res = {
+                                'result': 'error',
+                                'message': 'More than 3 wrong password attempts, Please contact Admin'
+                            }
+                        else:
+                            userprofile.login_locked = False
+                            userprofile.number_of_failed_login_attempts = 0
+                            userprofile.save()
+                            login(request, user)
+                            res = {'result': 'success', 'message': 'Loged in'}
                 else:
                     res = {
                         'result': 'error',
-                        'error_value': 'The user is not active',
+                        'message': 'The user is not active',
                     }
                     status_code = 500
 
                 response = simplejson.dumps(res)  
                                
             else:
-                response = simplejson.dumps({'result': 'error', 'message': 'Incorrect username and password'})
                 status_code = 500
+                user = User.objects.get(username=str(post_data['username']))
+                if user.userprofile_set.all():
+                    userprofile = user.userprofile_set.all()[0]
+                    if  userprofile.login_locked:
+                        res = {
+                            'result':'error',
+                            'message':'More than 3 wrong password attempts, Please contact Admin'
+                        }
+                    else:
+                        userprofile.number_of_failed_login_attempts = userprofile.number_of_failed_login_attempts + 1
+                        if userprofile.number_of_failed_login_attempts >= 3:
+                            userprofile.login_locked = True
+                        userprofile.save()
+                        res = {
+                            'result': 'error',
+                            'message': 'Incorrect username and password'
+                        }
+                else:
+                    res = {
+                        'result': 'error',
+                        'message': 'Incorrect username and password'
+                    }
+                    
+                response = simplejson.dumps(res)
                 
         except Exception as ex:
             response = simplejson.dumps({'result': 'error', 'message': str(ex)})
@@ -130,19 +170,20 @@ class AddSubDealer(View):
 
 class AddPurchanseInfo(View):
     def get(self, request, *args, **kwargs):
-        print datetime.datetime.now()
+
         current_date = datetime.datetime.now().date()
-        print datetime.datetime.now()
-        # current_date = datetime.datetime.now()
-        # current_date = (current_date + timedelta(days = 1)).date()
-        # print current_date
+        current_time = datetime.datetime.now().time()
+        purchase_date = current_date.strftime('%Y-%m-%d')
         context = {
-            'date': current_date.strftime('%Y-%m-%d'),
+            'date': purchase_date,
         }
         return render(request, 'add_purchase_info.html', context)
 
     def post(self, request, *args, **kwargs):
+
         post_dict = request.POST
+        current_date = datetime.datetime.now().date()
+        current_time = datetime.datetime.now().time()
         try:
             status_code = 200
             purchases = PurchaseInformation.objects.all().count()
@@ -177,7 +218,24 @@ class AddPurchanseInfo(View):
             purchase_info.installed_status = 'pending'
             purchase_info.remarks = post_dict['remarks']
             purchase_info.save()
-            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=post_dict['delivery_requested_date'])
+            
+            year, month, day = post_dict['delivery_requested_date'].split('-')
+            delivery_requested_date = datetime.date(int(year), int(month), int(day))
+            if current_date == delivery_requested_date:
+                if current_time.hour >= 12:
+                    next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
+                    if next_date.strftime("%A") == 'Sunday':
+                        print "next date"
+                        next_date = next_date + timedelta(days = 1)
+                        delivery_requested_date = next_date.strftime('%Y-%m-%d')
+                    elif next_date.strftime("%A") == 'Saturday':
+                        next_date = next_date + timedelta(days = 2)
+                        delivery_requested_date = next_date.strftime('%Y-%m-%d')
+                    else:
+                        delivery_requested_date = next_date.strftime('%Y-%m-%d')
+                else:
+                    delivery_requested_date = datetime.date(int(year), int(month), int(day))
+            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=delivery_requested_date)
             purchase_info.delivery_requested_date.add(quantity_delivery_date) 
             purchase_info.save()
             year, month, day = purchase_info.date.split('-')
@@ -196,8 +254,23 @@ class AddPurchanseInfo(View):
             else:
                 purchase_info.delivery_requested_charge = 0
             purchase_info.delivery_requested_date_change_charge = int(purchase_info.delivery_requested_date_change) * 30
+
             year, month, day = purchase_info.installation_requested_date.split('-')
             installation_requested_date = datetime.date(int(year), int(month), int(day))
+            if current_date == installation_requested_date:
+                if current_time.hour >= 12:
+                    next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
+                    if next_date.strftime("%A") == 'Sunday':
+                        next_date = next_date + timedelta(days = 1)
+                        installation_requested_date = next_date.strftime('%Y-%m-%d')
+                    elif next_date.strftime("%A") == 'Saturday':
+                        next_date = next_date + timedelta(days = 2)
+                        installation_requested_date = next_date.strftime('%Y-%m-%d')
+                    else:
+                        installation_requested_date = next_date.strftime('%Y-%m-%d')
+                else:
+                    installation_requested_date = datetime.date(int(year), int(month), int(day))
+
             installation_date_diff = (installation_requested_date - purchase_date).days
             if installation_date_diff < 3:
                 purchase_info.installation_requested_express_delivery = 'Express delivery'
@@ -283,9 +356,12 @@ class PurchaseInfoView(View):
         return render(request, 'view_purchase_info.html', context)
 
     def post(self, request, *args, **kwargs):
+
         post_dict = request.POST
         changed_quantity = False
         changed_delivery_date = False
+        current_date = datetime.datetime.now().date()
+        current_time = datetime.datetime.now().time()
         
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
         try:
@@ -337,8 +413,22 @@ class PurchaseInfoView(View):
                 
                 year, month, day = quantity_delivery_date.delivery_date.split('-')
                 delivery_date = datetime.date(int(year), int(month), int(day))
-                delivery_date_diff = (delivery_date - purchase_date).days
 
+                if current_date == delivery_date:
+                    if current_time.hour >= 12:
+                        next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
+                        if next_date.strftime("%A") == 'Sunday':
+                            next_date = next_date + timedelta(days = 1)
+                            delivery_date = next_date.strftime('%Y-%m-%d')
+                        elif next_date.strftime("%A") == 'Saturday':
+                            next_date = next_date + timedelta(days = 2)
+                            delivery_date = next_date.strftime('%Y-%m-%d')
+                        else:
+                            delivery_date = next_date.strftime('%Y-%m-%d')
+                    else:
+                        delivery_date = datetime.date(int(year), int(month), int(day))
+
+                delivery_date_diff = (delivery_date - purchase_date).days
                 if delivery_date_diff < 3:
                     purchase_info.delivery_requested_express_delivery = 'Express delivery'
                     purchase_info.save()
@@ -364,10 +454,27 @@ class PurchaseInfoView(View):
             else:
                 purchase_info.delivery_requested_express_delivery = purchase_info.delivery_requested_express_delivery
                 purchase_info.save()
+
             year, month, day = post_dict['installation_requested_date'].split('-')
             installation_requested_date = datetime.date(int(year), int(month), int(day))
+
             if purchase_info.installation_requested_date != installation_requested_date:
                 purchase_info.installation_requested_date_change = purchase_info.installation_requested_date_change + 1
+
+                if current_date == installation_requested_date:
+                    if current_time.hour >= 12:
+                        next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
+                        if next_date.strftime("%A") == 'Sunday':
+                            next_date = next_date + timedelta(days = 1)
+                            installation_requested_date = next_date.strftime('%Y-%m-%d')
+                        elif next_date.strftime("%A") == 'Saturday':
+                            next_date = next_date + timedelta(days = 2)
+                            installation_requested_date = next_date.strftime('%Y-%m-%d')
+                        else:
+                            installation_requested_date = next_date.strftime('%Y-%m-%d')
+                    else:
+                        installation_requested_date = datetime.date(int(year), int(month), int(day))
+
                 installation_date_diff = (installation_requested_date - purchase_date).days
                 if installation_date_diff < 3:
                     purchase_info.installation_requested_express_delivery = 'Express delivery'

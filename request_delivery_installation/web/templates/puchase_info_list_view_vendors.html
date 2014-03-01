@@ -1,0 +1,31 @@
+	
+	<table border="0" class="subcontent_table" cellspacing="0">
+		<tr>
+			<th>Sl No</th>
+			<th>Date</th>
+			<th>Dealer PO Number</th>
+			<th>Dealer/Company Name</th>
+			<th>Dealer Purchaser</th>
+			<th>Dealer Sales Man</th>
+			<th>Quantity</th>
+			<th>Model</th>
+			<th>View</th>
+		</tr>
+		{% if purchases %}
+			{% for purchase in purchases %}
+				<tr class="{% cycle 'odd' 'even' %}">
+					<td>{{purchase.slno}}</td>
+					<td>{{purchase.date}}</td>
+					<td>{{purchase.dealer_po_number}}</td>
+					<td>{{purchase.dealer_company_name}}</td>
+					<td>{{purchase.dealer_purchaser}}</td>
+					<td>{{purchase.dealer_sales_man}}</td>
+					{% for delivery_details in purchase.delivery_requested_date.all%}
+						<td>{{delivery_details.quantity}}</td>
+					{% endfor %}
+					<td>{{purchase.model}}</td>
+					<td><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></td>
+				</tr>	
+			{% endfor %}
+		{% endif %}
+	</table>

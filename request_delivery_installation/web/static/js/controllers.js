@@ -22,6 +22,14 @@ function convert_to_date(date_val) {
 	return converted_date;
 }
 
+function get_difference_of_dates(date1, date2) {
+	var date1 = convert_to_date(date1);
+	var date2 = convert_to_date(date2);
+	var diff = (date2 - date1)/(1000*60*60*24);
+	console.log(diff);
+	return diff;
+}
+
 function LoginController($scope, $element, $http, $timeout, $location)
 {
 	$scope.error_flag = false;
@@ -120,6 +128,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
 	$scope.error_flag = false;
 	$scope.is_vendor = false;
 	$scope.is_dealer = false;
+	$scope.is_express_delivery = false;
 	$scope.init = function(csrf_token)
     {
         $scope.csrf_token = csrf_token; 
@@ -137,9 +146,7 @@ function SignupController($scope, $element, $http, $timeout, $location)
     		$scope.is_dealer = false;
     	}
     }
-    $scope.is_user_type_dealer = function(){
-    	
-    }
+    
     $scope.signup = function(){
     	$scope.is_valid = register_form_validation($scope);
     	if($scope.is_valid) {
@@ -254,6 +261,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	$scope.date = '';
 	$scope.delivery_requested_date = ''; 
 	$scope.installation_requested_date = '';
+	$scope.express_delivery_msg = '';
+	$scope.express_installation_delivery_msg = '';
 	$scope.init = function(csrf_token, user_id, user_type ,purchase_id)
     {
         $scope.csrf_token = csrf_token;  
@@ -352,6 +361,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	}
     }
     $scope.is_purchase_form_valid = function(){
+    	$scope.is_express_delivery = false;
     	$scope.date = $('#date').val();
     	$scope.delivery_requested_date = $('#delivery_date').val();
 		$scope.installation_requested_date = $('#installation_date').val();
@@ -472,8 +482,43 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	    return true;
     }
     $scope.add_purchase_info = function(){
+
     	$scope.is_valid = $scope.is_purchase_form_valid();
     	if ($scope.is_valid) {
+    		$scope.error_flag = false;
+    		var delivery_diff = get_difference_of_dates($scope.date, $scope.delivery_requested_date);
+    		var installation_diff = get_difference_of_dates($scope.date, $scope.installation_requested_date);
+    		if (delivery_diff < 3 || installation_diff < 3) {
+    			$scope.is_express_delivery = true;
+    		} else {
+    			$scope.is_express_delivery = false;
+    			$scope.save_purchase_info('yes');
+    		}
+
+    		if (delivery_diff == 0) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 400$';
+    		} else if (delivery_diff == 1) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 200$';
+    		} else if (delivery_diff == 2) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 100$';
+    		} else {
+    			$scope.express_delivery_msg = '';
+    		}
+
+    		if (installation_diff == 0) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 400$';
+    		} else if (installation_diff == 1) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 200$';
+    		} else if (installation_diff == 2) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 100$';
+    		} else {
+    			$scope.express_installation_delivery_msg = '';
+    		}
+    	}
+    }
+    $scope.save_purchase_info = function(decision) {
+    	if (decision == 'yes') {
+    		$scope.is_express_delivery = false;
     		if ($scope.brandname == 'others' || $scope.brandname == 'select') {
 		    	$scope.brand_val = $scope.new_brand;
 		    } else {
@@ -494,6 +539,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 			} else {
 				$scope.dealer_company_name = $scope.not_dealer_name;
 			}
+
 			params = {
 		    	'date': $scope.date,
 		    	'dealer_po_number': $scope.dealer_po_number,
@@ -540,9 +586,24 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        $scope.error_message = data.message;
 		        $scope.error_flag = true;
 		    }); 
+
+    	} else if (decision == 'no') {
+    		$scope.is_express_delivery = false;
+    		if($scope.express_delivery_msg.length > 0) {
+    			$("#delivery_date").addClass('errorClass');
+    		} else {
+    			$("#delivery_date").removeClass('errorClass');
+    		}
+    		if ($scope.express_installation_delivery_msg.length > 0) {
+    			$('#installation_date').addClass('errorClass');
+    		} else {
+    			$('#installation_date').removeClass('errorClass');
+    		}
     	}
+   
     }
     $scope.is_edit_purchase_form_valid = function(){
+    	$scope.is_express_delivery = false;
     	$scope.date = $('#date').val();
     	$scope.delivery_requested_date = $('#delivery_date').val();
 		$scope.installation_requested_date = $('#installation_date').val();
@@ -680,8 +741,40 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     }
     $scope.edit_purchase_info = function(){
     	$scope.is_valid = $scope.is_edit_purchase_form_valid();
-    	console.log($scope.is_valid);
     	if ($scope.is_valid) {
+    		$scope.error_flag = false;
+    		var delivery_diff = get_difference_of_dates($scope.date, $scope.delivery_requested_date);
+    		var installation_diff = get_difference_of_dates($scope.date, $scope.installation_requested_date);
+    		if (delivery_diff < 3 || installation_diff < 3) {
+    			$scope.is_express_delivery = true;
+    		} else {
+    			$scope.is_express_delivery = false;
+    			$scope.edit_save_purchase_info('yes');
+    		}
+
+    		if (delivery_diff == 0) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 400$';
+    		} else if (delivery_diff == 1) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 200$';
+    		} else if (delivery_diff == 2) {
+    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 100$';
+    		} else {
+    			$scope.express_delivery_msg = '';
+    		}
+
+    		if (installation_diff == 0) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 400$';
+    		} else if (installation_diff == 1) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 200$';
+    		} else if (installation_diff == 2) {
+    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 100$';
+    		} else {
+    			$scope.express_installation_delivery_msg = '';
+    		}
+    	}
+    }
+    $scope.edit_save_purchase_info = function(decision) {
+    	if (decision == 'yes') {
     		$scope.delivery_status = $('#delivery_status').val();
     		$scope.installed_status = $('#installed_status').val();
     		params = {
@@ -733,8 +826,21 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		    {
 		        $scope.error_message = data.message;
 		        $scope.error_flag = true;
-		    }); 
+		    });
+    	} else if (decision == 'no') {
+    		$scope.is_express_delivery = false;
+    		if($scope.express_delivery_msg.length > 0) {
+    			$("#delivery_date").addClass('errorClass');
+    		} else {
+    			$("#delivery_date").removeClass('errorClass');
+    		}
+    		if ($scope.express_installation_delivery_msg.length > 0) {
+    			$('#installation_date').addClass('errorClass');
+    		} else {
+    			$('#installation_date').removeClass('errorClass');
+    		}
     	}
+
     }
 }
 
