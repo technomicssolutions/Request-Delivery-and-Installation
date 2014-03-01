@@ -46,10 +46,22 @@ form {
     width: 100%;
     height: 60px;
     padding-top: 30px;
+    background: none repeat scroll 0 0 #ADD8E6;
+    color: #FFFFFF;
 }
 .nav_right {
     float: right;
     margin-right: 45px;
+}
+.nav_right a {
+    border-right: 1px solid;
+    color: #FFFFFF;
+    font-size: 13px;
+    padding: 3px;
+    text-decoration: none;
+}
+.last {
+    border: none !important ;
 }
 .nav_left{
     float: left;
@@ -57,6 +69,8 @@ form {
 }
 .nav_left p {
     margin: 0px;
+    font-size: 20px;
+    font-weight: bold;
 }
 h1,h2{
     text-align: center;
@@ -81,7 +95,10 @@ h1,h2{
 }
 .subcontent_table td, th {
     border-color: #E6E6E6;
-    padding: 0px 7px 0 7px;
+    padding: 7px;
+}
+th {
+    font-size: 13px;
 }
 
 .subcontent_table {
@@ -89,6 +106,7 @@ h1,h2{
     margin: auto;
     text-align: left;
     font-size: 14px;
+    margin-top: 30px;
 }
 .subcontent_table th{
     height: 30px;

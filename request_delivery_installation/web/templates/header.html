@@ -10,7 +10,7 @@
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
 			<a href="{% url 'add_subdealer' user_id=user.id%}">Add Sub Dealers</a>
 		{% endif %}
-		<a href="{% url 'logout' %}">Logout</a>
+		<a class="last" href="{% url 'logout' %}">Logout</a>
 	</div>
 	<div class="nav_left">
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}

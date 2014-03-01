@@ -225,7 +225,6 @@ class AddPurchanseInfo(View):
                 if current_time.hour >= 12:
                     next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
                     if next_date.strftime("%A") == 'Sunday':
-                        print "next date"
                         next_date = next_date + timedelta(days = 1)
                         delivery_requested_date = next_date.strftime('%Y-%m-%d')
                     elif next_date.strftime("%A") == 'Saturday':

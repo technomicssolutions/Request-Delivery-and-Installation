@@ -26,7 +26,6 @@ function get_difference_of_dates(date1, date2) {
 	var date1 = convert_to_date(date1);
 	var date2 = convert_to_date(date2);
 	var diff = (date2 - date1)/(1000*60*60*24);
-	console.log(diff);
 	return diff;
 }
 
@@ -723,7 +722,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	        $scope.error_flag = true;
 	        return false;
 	    } else if (installation_dates < delivery_dates) {
-	    	console.log('less');
 	    	$scope.error_message = 'Installation Requested Date should be greater than or equal to the Delivery Requested Date';
 	        $scope.error_flag = true;
 	        return false;
@@ -805,7 +803,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        'remarks':$scope.remarks,
 		        "csrfmiddlewaretoken" : $scope.csrf_token
 		    }
-		    console.log(params);
 		    $http({
 		        method : 'Post',
 		        url : "/purchase_info/"+$scope.purchase_id+"/",
