@@ -5,7 +5,7 @@
 		{% endif %}
 		<a href="{% url 'home' %}">Purchase Details</a>
 		{% if user.userprofile_set.all.0.user_type == 'clerk' or user.userprofile_set.all.0.user_type == 'customer/dealer' or user.is_superuser %}
-			<a href="{% url 'add_purchase_info' %}">Add Purchase Info</a>
+			<a href="{% url 'add_purchase_info' %}">Add New Purchase Info Order</a>
 		{% endif %}
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
 			<a href="{% url 'add_subdealer' user_id=user.id%}">Add Sub Dealers</a>

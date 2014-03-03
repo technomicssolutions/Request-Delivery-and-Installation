@@ -65,11 +65,11 @@ form {
 }
 .nav_left{
     float: left;
-    margin-left: 44px;
+    margin-left: 8px;
 }
 .nav_left p {
     margin: 0px;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
 }
 h1,h2{

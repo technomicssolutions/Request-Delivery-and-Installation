@@ -10,7 +10,7 @@
 	<div class="contents">
 		{% include 'header.html' %}
 		<div class="add_subdealer"> 
-			<h1>Add New Purchase Info Order</h1>
+			<h2>Add New Purchase Info Order</h2>
 			<div class="form_content">
 				<form name="add_subdealer_content">{% csrf_token %}
 					<div class="formrow">
@@ -64,6 +64,10 @@
 							<input type="text" name="new_purchase_sales_man" ng-model="new_purchase_sales_man">
 						</div>
 					</div>
+					<br>
+					<br>
+					<br>
+
 					<div class="formrow">
 						<div class="formtext">Brand :</div>
 						<div ng-show="brand_flag" class="forminput">
@@ -83,7 +87,15 @@
 							<input type="text" name="model" ng-model="model">
 						</div>
 					</div>
-					
+					<div class="formrow">
+						<div class="formtext">Quantity :</div>
+						<div class="forminput">
+							<input type="text" name="quantity" ng-model="quantity">
+						</div>	
+					</div>
+					<br>
+					<br>
+					<br>
 					<div class="formrow">
 						<div class="formtext">Customer : </div>
 						<div class="forminput">
@@ -138,12 +150,7 @@
 							<input type="text" name="postal_code" ng-model="postal_code">
 						</div>
 					</div>
-					<div class="formrow">
-						<div class="formtext">Quantity :</div>
-						<div class="forminput">
-							<input type="text" name="quantity" ng-model="quantity">
-						</div>	
-					</div>
+					
 					<div class="formrow">
 						<div class="formtext">Delivery Requested Date :</div>
 						<div class="forminput">
@@ -156,6 +163,10 @@
 							<input type="text" name="installation_requested_date" id="installation_date" placeholder="eg: yyyy-mm-dd">
 						</div>
 					</div>
+
+					<br>
+					<br>
+					<br>
 					<div class="formrow">
 						<div class="formtext">Extra Man Power :</div>
 						<div class="forminput">
