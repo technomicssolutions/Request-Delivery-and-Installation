@@ -12,6 +12,9 @@ import datetime
 from datetime import timedelta
 
 
+from django.db import IntegrityError
+
+
 class Home(View):
     def get(self, request, *args, **kwargs):
         context = {}
@@ -126,8 +129,8 @@ class Signup(View):
             user.save()
             userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'], brand_name=post_dict['brand'], dealer_company_name=post_dict['dealer_name'] )
             res = {'result': 'success', 'message': 'Loged in'}
-        except Exception as ex:
-            res = {'result': 'error', 'message': str(ex)}
+        except IntegrityError as ex:
+            res = {'result': 'error', 'message': 'User with this username already exists'}
             status_code = 500
         response = simplejson.dumps(res)
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
