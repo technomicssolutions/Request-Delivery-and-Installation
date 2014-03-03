@@ -20,7 +20,13 @@
 				{% for delivery_details in purchase.delivery_requested_date.all%}
 					<td>{{delivery_details.delivery_date}}</td>
 				{% endfor %}
-				<td>{{purchase.get_delivered_status}}</td>
+				<td>
+				{%if purchase.delivered_status %}
+					{{purchase.get_delivered_status}}
+				{% else %}
+					&nbsp;
+				{% endif %}
+				</td>
 				
 				<td><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></td>
 			</tr>	
