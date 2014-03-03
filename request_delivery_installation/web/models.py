@@ -108,10 +108,16 @@ class PurchaseInformation(Dates):
         return self.created_by.first_name
 
     def get_delivered_status(self):
-        return dict(DELIVERED_INSTALLED_STATUS)[self.delivered_status]
+        try:
+            return dict(DELIVERED_INSTALLED_STATUS)[self.delivered_status]
+        except:
+            return 'Pending'
 
     def get_installed_status(self):
-        return dict(DELIVERED_INSTALLED_STATUS)[self.installed_status]
+        try:
+            return dict(DELIVERED_INSTALLED_STATUS)[self.installed_status]
+        except:
+            return 'Pending'
     
     class Meta:
         verbose_name = 'Purchase Information'
