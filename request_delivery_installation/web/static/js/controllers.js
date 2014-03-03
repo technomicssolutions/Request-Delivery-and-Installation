@@ -113,17 +113,14 @@ function edit_delivery_requested_date_validation() {
 function edit_installation_requested_date_validation() {
 	var purchase_date = $('#date').val();
 	var purchase_dates = convert_to_date($('#date').val());
-	console.log('purchase date'+purchase_dates.getDate());
 	var installed_date = $('#installation_date').val();
 	var installed_dates = convert_to_date($('#installation_date').val());
 	var dt = new Date();
 	diff = (installed_dates - dt)/(1000*60*60*24);
-	console.log(diff);
 	if ((installed_dates.getDate() == dt.getDate() && installed_dates.getMonth() == dt.getMonth() && installed_dates.getYear() == dt.getYear()) || diff > 0) {
 		
 		if (purchase_dates.getDate() == dt.getDate() && purchase_dates.getMonth() == dt.getMonth() && purchase_dates.getYear() == dt.getYear()) {
-			console.log('equal');
-			var installed_diff = (delivery_dates - dt)/(1000*60*60*24);
+			var installed_diff = (installed_dates - dt)/(1000*60*60*24);
 			if (installed_diff <= 0) {
 				if (dt.getHours() >= 12) {
 					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
@@ -142,7 +139,6 @@ function edit_installation_requested_date_validation() {
 				$('#is_express_installation').hide();
 			}
 		} else {
-			console.log('not equal');
 			var installed_diff = (installed_dates - purchase_dates)/(1000*60*60*24);
 			if (installed_diff <= 0) {
 				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 400$')
@@ -856,38 +852,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	$scope.is_valid = $scope.is_edit_purchase_form_valid();
     	if ($scope.is_valid) {
     		$scope.error_flag = false;
-    		var delivery_diff = get_difference_of_dates($scope.date, $scope.delivery_requested_date);
-    		var installation_diff = get_difference_of_dates($scope.date, $scope.installation_requested_date);
-    		if (delivery_diff < 3 || installation_diff < 3) {
-    			$scope.is_express_delivery = true;
-    		} else {
-    			$scope.is_express_delivery = false;
-    			$scope.edit_save_purchase_info('yes');
-    		}
-
-    		if (delivery_diff == 0) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 400$';
-    		} else if (delivery_diff == 1) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 200$';
-    		} else if (delivery_diff == 2) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 100$';
-    		} else {
-    			$scope.express_delivery_msg = '';
-    		}
-
-    		if (installation_diff == 0) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 400$';
-    		} else if (installation_diff == 1) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 200$';
-    		} else if (installation_diff == 2) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 100$';
-    		} else {
-    			$scope.express_installation_delivery_msg = '';
-    		}
-    	}
-    }
-    $scope.edit_save_purchase_info = function(decision) {
-    	if (decision == 'yes') {
     		$scope.delivery_status = $('#delivery_status').val();
     		$scope.installed_status = $('#installed_status').val();
     		params = {
@@ -939,20 +903,8 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        $scope.error_message = data.message;
 		        $scope.error_flag = true;
 		    });
-    	} else if (decision == 'no') {
-    		$scope.is_express_delivery = false;
-    		if($scope.express_delivery_msg.length > 0) {
-    			$("#delivery_date").addClass('errorClass');
-    		} else {
-    			$("#delivery_date").removeClass('errorClass');
-    		}
-    		if ($scope.express_installation_delivery_msg.length > 0) {
-    			$('#installation_date').addClass('errorClass');
-    		} else {
-    			$('#installation_date').removeClass('errorClass');
-    		}
+    		
     	}
-
     }
 }
 
