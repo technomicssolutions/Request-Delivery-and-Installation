@@ -27,7 +27,7 @@ class Home(View):
             elif user.userprofile_set.all()[0].user_type == 'internal_technician':
                 purchase_info = PurchaseInformation.objects.all().order_by('installation_requested_date')
             else:
-               purchase_info = PurchaseInformation.objects.all() 
+               purchase_info = PurchaseInformation.objects.all().order_by('-created_date') 
         else:
             purchase_info = PurchaseInformation.objects.all()
         if purchase_info:
@@ -212,11 +212,44 @@ class AddPurchanseInfo(View):
             purchase_info.postal_code = post_dict['postal_code']
             purchase_info.telephone_number = post_dict['telephone_no']
             purchase_info.mobile_number = post_dict['mobile_no']
-            purchase_info.installation_requested_date = post_dict['installation_requested_date']
+            # purchase_info.installation_requested_date = post_dict['installation_requested_date']
             purchase_info.extra_man_power_request = post_dict['extra_man_power']
             purchase_info.delivered_status = 'pending'
             purchase_info.installed_status = 'pending'
             purchase_info.remarks = post_dict['remarks']
+
+            year, month, day = post_dict['date'].split('-')
+            purchase_date = datetime.date(int(year), int(month), int(day))
+            
+            year, month, day = post_dict['installation_requested_date'].split('-')
+            installation_requested_date = datetime.date(int(year), int(month), int(day))
+            if current_date == installation_requested_date:
+                if current_time.hour >= 12:
+                    next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
+                    if next_date.strftime("%A") == 'Sunday':
+                        next_date = next_date + timedelta(days = 1)
+                        installation_requested_date = next_date
+                    elif next_date.strftime("%A") == 'Saturday':
+                        next_date = next_date + timedelta(days = 2)
+                        installation_requested_date = next_date
+                    else:
+                        installation_requested_date = next_date
+                else:
+                    installation_requested_date = datetime.date(int(year), int(month), int(day))
+            purchase_info.installation_requested_date = installation_requested_date 
+            installation_date_diff = (installation_requested_date - purchase_date).days
+            if installation_date_diff < 3:
+                purchase_info.installation_requested_express_delivery = 'Express delivery'
+            if installation_date_diff == 0:
+                purchase_info.installation_requested_charge = 400
+            elif installation_date_diff == 1:
+                purchase_info.installation_requested_charge = 200
+            elif installation_date_diff == 2:
+                purchase_info.installation_requested_charge = 100
+            else:
+                purchase_info.installation_requested_charge = 0
+            purchase_info.installation_requested_date_change_charge = int(purchase_info.installation_requested_date_change) * 30
+
             purchase_info.save()
             
             year, month, day = post_dict['delivery_requested_date'].split('-')
@@ -237,8 +270,7 @@ class AddPurchanseInfo(View):
             quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= post_dict['quantity'], delivery_date=delivery_requested_date)
             purchase_info.delivery_requested_date.add(quantity_delivery_date) 
             purchase_info.save()
-            year, month, day = purchase_info.date.split('-')
-            purchase_date = datetime.date(int(year), int(month), int(day))
+            
             for delivery_details in purchase_info.delivery_requested_date.all():
                 delivery_date = delivery_details.delivery_date
                 delivery_date_diff = (delivery_date - purchase_date).days
@@ -254,34 +286,6 @@ class AddPurchanseInfo(View):
                 purchase_info.delivery_requested_charge = 0
             purchase_info.delivery_requested_date_change_charge = int(purchase_info.delivery_requested_date_change) * 30
 
-            year, month, day = purchase_info.installation_requested_date.split('-')
-            installation_requested_date = datetime.date(int(year), int(month), int(day))
-            if current_date == installation_requested_date:
-                if current_time.hour >= 12:
-                    next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
-                    if next_date.strftime("%A") == 'Sunday':
-                        next_date = next_date + timedelta(days = 1)
-                        installation_requested_date = next_date.strftime('%Y-%m-%d')
-                    elif next_date.strftime("%A") == 'Saturday':
-                        next_date = next_date + timedelta(days = 2)
-                        installation_requested_date = next_date.strftime('%Y-%m-%d')
-                    else:
-                        installation_requested_date = next_date.strftime('%Y-%m-%d')
-                else:
-                    installation_requested_date = datetime.date(int(year), int(month), int(day))
-
-            installation_date_diff = (installation_requested_date - purchase_date).days
-            if installation_date_diff < 3:
-                purchase_info.installation_requested_express_delivery = 'Express delivery'
-            if installation_date_diff == 0:
-                purchase_info.installation_requested_charge = 400
-            elif installation_date_diff == 1:
-                purchase_info.installation_requested_charge = 200
-            elif installation_date_diff == 2:
-                purchase_info.installation_requested_charge = 100
-            else:
-                purchase_info.installation_requested_charge = 0
-            purchase_info.installation_requested_date_change_charge = int(purchase_info.installation_requested_date_change) * 30
             purchase_info.save()
             response = simplejson.dumps({'result': 'success', 'message': 'Successfully added'})
         except Exception as ex:

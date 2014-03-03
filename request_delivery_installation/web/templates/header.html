@@ -14,9 +14,9 @@
 	</div>
 	<div class="nav_left">
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
-			<p>Welcome {{ user.userprofile_set.all.0.dealer_company_name }} Logged in : {{ user.first_name }} {{ user.last_name }}</p>
+			<p>Welcome {{ user.userprofile_set.all.0.dealer_company_name }} Logged in : {{ user.username}}</p>
 		{% else %}
-			<p>Welcome {{ user.first_name }} {{ user.last_name }}</p>
+			<p>Welcome {{ user.username}}</p>
 		{% endif %}
 	</div>	
 </div>

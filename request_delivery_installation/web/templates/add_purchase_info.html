@@ -154,16 +154,29 @@
 					<div class="formrow">
 						<div class="formtext">Delivery Requested Date :</div>
 						<div class="forminput">
-							<input type="text" name="delivery_requested_date" id="delivery_date" placeholder="eg: yyyy-mm-dd">
+							<input type="text" name="delivery_requested_date" id="delivery_date" placeholder="eg: yyyy-mm-dd" onchange="delivery_requested_date_validation()">
+						</div>
+					</div>
+					<div class="formrow" id="is_express_delivery">
+						<div class="formtext">
+						</div>
+						<div class="forminput">
+							<p class="messages" id="express_delivery_message"></p>
 						</div>
 					</div>
 					<div class="formrow">
 						<div class="formtext">Installation Requested Date :</div>
 						<div class="forminput">
-							<input type="text" name="installation_requested_date" id="installation_date" placeholder="eg: yyyy-mm-dd">
+							<input type="text" name="installation_requested_date" id="installation_date" placeholder="eg: yyyy-mm-dd" onchange="installation_requested_date_validation()">
 						</div>
 					</div>
-
+					<div class="formrow" id="is_express_installation">
+						<div class="formtext">
+						</div>
+						<div class="forminput">
+							<p class="messages" id="express_installation_message"></p>
+						</div>
+					</div>
 					<br>
 					<br>
 					<br>

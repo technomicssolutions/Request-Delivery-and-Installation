@@ -14,7 +14,8 @@ function get_day_name(day) {
 		weekday[6]="Saturday";
 	var day_name = weekday[day]
 	return day_name;
-}
+} 
+
 
 function convert_to_date(date_val) {
 	var date_value = date_val.split('-');
@@ -27,6 +28,165 @@ function get_difference_of_dates(date1, date2) {
 	var date2 = convert_to_date(date2);
 	var diff = (date2 - date1)/(1000*60*60*24);
 	return diff;
+}
+
+function delivery_requested_date_validation() {
+	var delivery_date = $('#delivery_date').val();
+	var delivery_dates = convert_to_date($('#delivery_date').val());
+	var dt = new Date();
+	var delivery_diff = (delivery_dates - dt)/(1000*60*60*24);
+	if (delivery_diff <= 0) {
+			if (dt.getHours() >= 12) {
+			$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+			$('#is_express_delivery').show();
+		} else {
+			$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+			$('#is_express_delivery').show();
+		}
+	} else if (delivery_diff > 0 && delivery_diff <= 1) {
+		$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+		$('#is_express_delivery').show();
+	} else if (delivery_diff > 1 && delivery_diff <= 2) {
+		$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+		$('#is_express_delivery').show();
+	} else {
+		$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+		$('#is_express_delivery').hide();
+	}
+}
+
+function edit_delivery_requested_date_validation() {
+	var purchase_date = $('#date').val();
+	var purchase_dates = convert_to_date($('#date').val());
+	console.log('purchase date'+purchase_dates.getDate());
+	var delivery_date = $('#delivery_date').val();
+	var delivery_dates = convert_to_date($('#delivery_date').val());
+	var dt = new Date();
+	diff = (delivery_dates - dt)/(1000*60*60*24);
+	console.log(diff);
+	if ((delivery_dates.getDate() == dt.getDate() && delivery_dates.getMonth() == dt.getMonth() && delivery_dates.getYear() == dt.getYear()) || diff > 0) {
+		
+		if (purchase_dates.getDate() == dt.getDate() && purchase_dates.getMonth() == dt.getMonth() && purchase_dates.getYear() == dt.getYear()) {
+			console.log('equal');
+			var delivery_diff = (delivery_dates - dt)/(1000*60*60*24);
+			if (delivery_diff <= 0) {
+				if (dt.getHours() >= 12) {
+					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+					$('#is_express_delivery').show();
+				} else {
+					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+					$('#is_express_delivery').show();
+				}
+			} else if (delivery_diff > 0 && delivery_diff <= 1) {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+				$('#is_express_delivery').show();
+			} else if (delivery_diff > 1 && delivery_diff <= 2) {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#is_express_delivery').show();
+			} else {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#is_express_delivery').hide();
+			}
+		} else {
+			console.log('not equal');
+			var delivery_diff = (delivery_dates - purchase_dates)/(1000*60*60*24);
+			if (delivery_diff <= 0) {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+				$('#is_express_delivery').show();
+			} else if (delivery_diff > 0 && delivery_diff <= 1) {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+				$('#is_express_delivery').show();
+			} else if (delivery_diff > 1 && delivery_diff <= 2) {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#is_express_delivery').show();
+			} else {
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#is_express_delivery').hide();
+			}
+		}
+	} else if (diff < 0){
+		$('#express_delivery_message').html('Please choose a date greater than or equal to todays date');
+		$('#is_express_delivery').show();
+	}
+}
+
+function edit_installation_requested_date_validation() {
+	var purchase_date = $('#date').val();
+	var purchase_dates = convert_to_date($('#date').val());
+	console.log('purchase date'+purchase_dates.getDate());
+	var installed_date = $('#installation_date').val();
+	var installed_dates = convert_to_date($('#installation_date').val());
+	var dt = new Date();
+	diff = (installed_dates - dt)/(1000*60*60*24);
+	console.log(diff);
+	if ((installed_dates.getDate() == dt.getDate() && installed_dates.getMonth() == dt.getMonth() && installed_dates.getYear() == dt.getYear()) || diff > 0) {
+		
+		if (purchase_dates.getDate() == dt.getDate() && purchase_dates.getMonth() == dt.getMonth() && purchase_dates.getYear() == dt.getYear()) {
+			console.log('equal');
+			var installed_diff = (delivery_dates - dt)/(1000*60*60*24);
+			if (installed_diff <= 0) {
+				if (dt.getHours() >= 12) {
+					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+					$('#is_express_installation').show();
+				} else {
+					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+					$('#is_express_installation').show();
+				}
+			} else if (installed_diff > 0 && installed_diff <= 1) {
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+				$('#is_express_installation').show();
+			} else if (installed_diff > 1 && installed_diff <= 2) {
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+				$('#is_express_installation').show();
+			} else {
+				$('#is_express_installation').hide();
+			}
+		} else {
+			console.log('not equal');
+			var installed_diff = (installed_dates - purchase_dates)/(1000*60*60*24);
+			if (installed_diff <= 0) {
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 400$')
+				$('#is_express_installation').show();
+				
+			} else if (installed_diff > 0 && installed_diff <= 1) {
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+				$('#is_express_installation').show();
+			} else if (installed_diff > 1 && installed_diff <= 2) {
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+				$('#is_express_installation').show();
+			} else {
+				$('#is_express_installation').hide();
+			}
+		}
+	} else if (diff < 0){
+		$('#express_installation_message').html('Please choose a date greater than or equal to todays date');
+		$('#is_express_installation').show();
+	}
+}
+
+function installation_requested_date_validation() {
+	var installed_date = $('#installation_date').val();
+	var installed_dates = convert_to_date($('#installation_date').val());
+	var dt = new Date();
+	var installed_diff = (installed_dates - dt)/(1000*60*60*24);
+	if (installed_diff <= 0) {
+			if (dt.getHours() >= 12) {
+			$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+			$('#is_express_installation').show();
+		} else {
+			$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 400$')
+			$('#is_express_installation').show();
+		}
+	} else if (installed_diff > 0 && installed_diff <= 1) {
+		$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+		$('#is_express_installation').show();
+	} else if (installed_diff > 1 && installed_diff <= 2) {
+		$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+		$('#is_express_installation').show();
+	} else {
+		$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+		$('#is_express_installation').hide();
+	}
 }
 
 function LoginController($scope, $element, $http, $timeout, $location)
@@ -262,6 +422,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 	$scope.installation_requested_date = '';
 	$scope.express_delivery_msg = '';
 	$scope.express_installation_delivery_msg = '';
+	$('#is_express_delivery').hide();
 	$scope.init = function(csrf_token, user_id, user_type ,purchase_id)
     {
         $scope.csrf_token = csrf_token;  
@@ -485,38 +646,6 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
     	$scope.is_valid = $scope.is_purchase_form_valid();
     	if ($scope.is_valid) {
     		$scope.error_flag = false;
-    		var delivery_diff = get_difference_of_dates($scope.date, $scope.delivery_requested_date);
-    		var installation_diff = get_difference_of_dates($scope.date, $scope.installation_requested_date);
-    		if (delivery_diff < 3 || installation_diff < 3) {
-    			$scope.is_express_delivery = true;
-    		} else {
-    			$scope.is_express_delivery = false;
-    			$scope.save_purchase_info('yes');
-    		}
-
-    		if (delivery_diff == 0) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 400$';
-    		} else if (delivery_diff == 1) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 200$';
-    		} else if (delivery_diff == 2) {
-    			$scope.express_delivery_msg = 'Express delivery charge for the selected Delivery Requested Date is 100$';
-    		} else {
-    			$scope.express_delivery_msg = '';
-    		}
-
-    		if (installation_diff == 0) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 400$';
-    		} else if (installation_diff == 1) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 200$';
-    		} else if (installation_diff == 2) {
-    			$scope.express_installation_delivery_msg = 'Express Installation charge for the selected Installation Requested Date is 100$';
-    		} else {
-    			$scope.express_installation_delivery_msg = '';
-    		}
-    	}
-    }
-    $scope.save_purchase_info = function(decision) {
-    	if (decision == 'yes') {
     		$scope.is_express_delivery = false;
     		if ($scope.brandname == 'others' || $scope.brandname == 'select') {
 		    	$scope.brand_val = $scope.new_brand;
@@ -585,21 +714,7 @@ function AddEditPurchaseInfoController($scope, $element, $http, $timeout, $locat
 		        $scope.error_message = data.message;
 		        $scope.error_flag = true;
 		    }); 
-
-    	} else if (decision == 'no') {
-    		$scope.is_express_delivery = false;
-    		if($scope.express_delivery_msg.length > 0) {
-    			$("#delivery_date").addClass('errorClass');
-    		} else {
-    			$("#delivery_date").removeClass('errorClass');
-    		}
-    		if ($scope.express_installation_delivery_msg.length > 0) {
-    			$('#installation_date').addClass('errorClass');
-    		} else {
-    			$('#installation_date').removeClass('errorClass');
-    		}
     	}
-   
     }
     $scope.is_edit_purchase_form_valid = function(){
     	$scope.is_express_delivery = false;

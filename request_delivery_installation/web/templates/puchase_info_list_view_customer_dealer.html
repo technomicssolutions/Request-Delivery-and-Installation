@@ -1,4 +1,4 @@
-	
+	<!-- 
 	{% if message %}
 		<p class="error_message"> {{message}} </p>
 	{% endif %}
@@ -6,4 +6,30 @@
 		Please enter Delivery Order Number
 		<input type="text" name="delivery_order_number" ng-model="delivery_order_number">
 		<a href="#" ng-click="search_purchase_info()">Search</a>
-	</div>
+	</div> -->
+<table border="0" class="subcontent_table" cellspacing="0">
+	<tr>
+		<th>Sl No</th>
+		<th>Date</th>
+		<th>Dealer PO Number</th>
+		<th>Dealer Sales Man</th>
+		<th>Delivery Requested Date</th>
+		<th>Installation Requested Date</th>
+		<th>View</th>
+	</tr>
+	{% if purchases %}
+		{% for purchase in purchases %}
+			<tr class="{% cycle 'odd' 'even' %}">
+				<td>{{purchase.slno}}</td>
+				<td>{{purchase.date}}</td>
+				<td>{{purchase.dealer_po_number}}</td>
+				<td>{{purchase.dealer_sales_man}}</td>
+				{% for delivery_details in purchase.delivery_requested_date.all%}
+					<td>{{delivery_details.delivery_date}}</td>
+				{% endfor %}	
+				<td>{{purchase.installation_requested_date}}</td>
+				<td><a href="{% url 'purchase_info' purchase_info_id=purchase.id%}">View</a></td>
+			</tr>	
+		{% endfor %}
+	{% endif %}
+</table>
