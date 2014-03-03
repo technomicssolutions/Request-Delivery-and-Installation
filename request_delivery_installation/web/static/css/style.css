@@ -194,3 +194,7 @@ textarea {
 .messages {
     color: #0000FF;
 }
+
+#view_purchase_info .formrow {
+    margin-left: -127px;
+}
