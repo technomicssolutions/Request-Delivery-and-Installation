@@ -159,16 +159,27 @@
 	<label>Installation Date Change Charge : </label>
 	<span>{{purchase.installation_requested_date_change_charge}} $</span>
 </div>
-
-<div class="sub_contents">
-	<label>Installed Status : </label>
-	{% if purchase.installed_status %}
-		<span>{{purchase.get_installed_status}}</span>
-	{% else %}
-		<span>&nbsp;</span>
-	{% endif %}
-	<input type="hidden" name="delivery_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
-</div>
+{% if installed_status %}
+	<div class="sub_contents">
+		<label>Installed Status : </label>
+		<select id="installed_status">
+			<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
+			<option value="delivery_confirmed" {%if purchase.installed_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+			<option value="completed" {%if purchase.installed_status == "completed"%}selected="true"{%endif%}>Completed</option>
+		</select>
+		
+	</div>
+{% else %}
+	<div class="sub_contents">
+		<label>Installed Status : </label>
+		{% if purchase.installed_status %}
+			<span>{{purchase.get_installed_status}}</span>
+		{% else %}
+			<span>&nbsp;</span>
+		{% endif %}
+		<input type="hidden" name="installed_status" value="{{purchase.installed_status}}" id="installed_status"><br></span>
+	</div>
+{% endif %}
 <div class="sub_contents">
 	<label>Extra Man Power : </label>
 	<input type="text" name="extra_man_power_request" value="{{purchase.extra_man_power_request}}" id="extra_man_power"><br>
@@ -176,7 +187,6 @@
 
 <div class="sub_contents">
 	<label>Remarks : </label>
-	<span type="text" name="remarks" readonly>{{purchase.remarks}}</span>
 	<input type="text" name="remarks" id="remarks" value="{{purchase.remarks}}">
 </div>
 <div class="sub_contents">

@@ -10,9 +10,15 @@ USER_TYPE_CHOICES = (
     ('vendors', 'Vendors'),
 )
 
-DELIVERED_INSTALLED_STATUS = (
+DELIVERED_STATUS = (
     ('pending', 'Pending'),
     ('delivery_confirmed', 'Delivery-Confirmed'),
+    ('completed', 'Completed'),
+)
+
+INSTALLED_STATUS = (
+    ('pending', 'Pending'),
+    ('installation_confirmed', 'Installation-Confirmed'),
     ('completed', 'Completed'),
 )
 
@@ -92,14 +98,14 @@ class PurchaseInformation(Dates):
     delivery_requested_date_change = models.IntegerField('Number of changes in Quantity and Delivery Date', default=0)
     delivery_requested_date_change_charge = models.IntegerField('Delivery Requested Date Change Charge', default=0)
     delivery_requested_charge = models.IntegerField('Delivery Requested charge', default=0)
-    delivered_status = models.CharField('Delivery Status', null=True, blank=True, max_length=50, choices=DELIVERED_INSTALLED_STATUS)
+    delivered_status = models.CharField('Delivery Status', null=True, blank=True, max_length=50, choices=DELIVERED_STATUS)
     
     installation_requested_date = models.DateField('Installation Requested Date')
     installation_requested_express_delivery = models.TextField('Installation Requested Express Delivery', max_length=500, null=True, blank=True)
     installation_requested_date_change = models.IntegerField('Number of changes in Installation Requested Date', default=0)
     installation_requested_date_change_charge = models.IntegerField('Installation Requested Date Change Charge', default=0)
     installation_requested_charge = models.IntegerField('Installation Requested charge', default=0)
-    installed_status = models.CharField('Installation Status', null=True, blank=True, max_length=50, choices=DELIVERED_INSTALLED_STATUS)
+    installed_status = models.CharField('Installation Status', null=True, blank=True, max_length=50, choices=INSTALLED_STATUS)
 
     extra_man_power_request = models.IntegerField('Extra Man Power Request', default=0)
     remarks = models.TextField('Remarks', null=True, blank=True)
@@ -109,13 +115,13 @@ class PurchaseInformation(Dates):
 
     def get_delivered_status(self):
         try:
-            return dict(DELIVERED_INSTALLED_STATUS)[self.delivered_status]
+            return dict(DELIVERED_STATUS)[self.delivered_status]
         except:
             return 'Pending'
 
     def get_installed_status(self):
         try:
-            return dict(DELIVERED_INSTALLED_STATUS)[self.installed_status]
+            return dict(INSTALLED_STATUS)[self.installed_status]
         except:
             return 'Pending'
     

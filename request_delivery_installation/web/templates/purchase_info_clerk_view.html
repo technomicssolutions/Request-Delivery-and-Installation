@@ -106,15 +106,26 @@
 	<label>Delivery Date Change Charge : </label>
 	<span>{{purchase.delivery_requested_date_change_charge}} $</span>
 </div>
-<div class="sub_contents">
-	<label>Delivery Status : </label>
-	{% if purchase.delivered_status %}
-		<span>{{purchase.get_delivered_status}}</span>
-	{% else %}
-		<span>&nbsp;</span>
-	{% endif %}
-	<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
-</div>
+{% if delivery_status %}
+	<div class="sub_contents">
+		<label>Delivery Status : </label>
+		<select id="delivery_status">
+			<option value="pending" {%if purchase.delivered_status == "pending"%}selected="true"{%endif%}>Pending</option>
+			<option value="delivery_confirmed" {%if purchase.delivered_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+			<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+		</select>
+	</div>
+{% else %}
+	<div class="sub_contents">
+		<label>Delivery Status : </label>
+		{% if purchase.delivered_status %}
+			<span>{{purchase.get_delivered_status}}</span>
+		{% else %}
+			<span>&nbsp;</span>
+		{% endif %}
+		<input type="hidden" name="delivery_status" value="{{purchase.delivered_status}}" id="delivery_status"><br></span>
+	</div>
+{% endif %}
 
 <div class="sub_contents">
 	<label>Installation Requested Date : </label>
