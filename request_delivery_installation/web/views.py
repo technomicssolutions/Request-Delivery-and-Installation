@@ -28,7 +28,7 @@ class Home(View):
             elif user.userprofile_set.all()[0].user_type == 'clerk':
                 purchase_info = PurchaseInformation.objects.all().order_by('slno')
             elif user.userprofile_set.all()[0].user_type == 'internal_technician':
-                purchase_info = PurchaseInformation.objects.all().order_by('installation_requested_date')
+                purchase_info = PurchaseInformation.objects.all().order_by('-installation_requested_date','-id')
             else:
                purchase_info = PurchaseInformation.objects.all().order_by('-created_date') 
         else:
@@ -82,24 +82,25 @@ class Login(View):
                                
             else:
                 status_code = 500
-                user = User.objects.get(username=str(post_data['username']))
-                if user.userprofile_set.all():
-                    userprofile = user.userprofile_set.all()[0]
-                    if  userprofile.login_locked:
-                        res = {
-                            'result':'error',
-                            'message':'More than 3 wrong password attempts, Please contact Admin'
-                        }
-                    else:
-                        userprofile.number_of_failed_login_attempts = userprofile.number_of_failed_login_attempts + 1
-                        if userprofile.number_of_failed_login_attempts >= 3:
-                            userprofile.login_locked = True
-                        userprofile.save()
-                        res = {
-                            'result': 'error',
-                            'message': 'Incorrect username and password'
-                        }
-                else:
+                try:
+                    user = User.objects.get(username=str(post_data['username']))
+                    if user.userprofile_set.all():
+                        userprofile = user.userprofile_set.all()[0]
+                        if  userprofile.login_locked:
+                            res = {
+                                'result':'error',
+                                'message':'More than 3 wrong password attempts, Please contact Admin'
+                            }
+                        else:
+                            userprofile.number_of_failed_login_attempts = userprofile.number_of_failed_login_attempts + 1
+                            if userprofile.number_of_failed_login_attempts >= 3:
+                                userprofile.login_locked = True
+                            userprofile.save()
+                            res = {
+                                'result': 'error',
+                                'message': 'Incorrect username and password'
+                            }
+                except User.DoesNotExist:
                     res = {
                         'result': 'error',
                         'message': 'Incorrect username and password'
@@ -107,8 +108,8 @@ class Login(View):
                     
                 response = simplejson.dumps(res)
                 
-        except Exception as ex:
-            response = simplejson.dumps({'result': 'error', 'message': str(ex)})
+        except IntegrityError as ex:
+            response = simplejson.dumps({'result': 'error', 'message': 'User with this username doesnot exists '})
             status_code = 500
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 
@@ -166,8 +167,8 @@ class AddSubDealer(View):
             userprofile = UserProfile.objects.create(user=user, user_type=post_dict['user_type'])
             subdealer = SubDealers.objects.create(user=user, userprofile=dealer)
             response = simplejson.dumps({'result': 'success', 'message': 'Added Successfully'})
-        except Exception as ex:
-            response = simplejson.dumps({'result': 'error', 'message': str(ex)})
+        except IntegrityError as ex:
+            response = simplejson.dumps({'result': 'error', 'message': 'User with this username already exists'})
             status_code = 500
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 
@@ -291,8 +292,8 @@ class AddPurchanseInfo(View):
 
             purchase_info.save()
             response = simplejson.dumps({'result': 'success', 'message': 'Successfully added'})
-        except Exception as ex:
-            response = simplejson.dumps({'result': 'error', 'message': str(ex)})
+        except IntegrityError as ex:
+            response = simplejson.dumps({'result': 'error', 'message': 'Duplicate Entry for the Delivery Order Number'})
             status_code = 500
         return HttpResponse(response, status = status_code, mimetype = 'application/json')
 

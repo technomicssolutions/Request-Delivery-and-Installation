@@ -54,14 +54,24 @@ form {
     margin-right: 45px;
 }
 .nav_right a {
-    border-right: 1px solid;
+    /*border-right: 1px solid;*/
+    border: 1px solid;
     color: #FFFFFF;
     font-size: 13px;
     padding: 3px;
     text-decoration: none;
 }
 .last {
-    border: none !important ;
+    /*border: none !important ;*/
+}
+.nav_right a:hover {
+    /*border-right: 1px solid;*/
+    border: 1px solid;
+    color: #FFFFFF;
+    font-size: 13px;
+    padding: 3px;
+    text-decoration: none;
+    background-color: #B3B3B3;
 }
 .nav_left{
     float: left;

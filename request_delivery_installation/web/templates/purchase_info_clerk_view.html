@@ -82,6 +82,7 @@
 	<div class="sub_contents">
 		<label>Delivery Requested Date : </label>
 		<input type="text" name="delivery_requested_date" value="{{delivery_details.delivery_date|date:'Y-m-j'}}" id="delivery_date" onchange="edit_delivery_requested_date_validation()"><br>
+		<input type="hidden" name="delivery_date_changes" id="delivery_date_changes" value="{{purchase.delivery_requested_date_change}}">
 	</div>
 	<div class="formrow" id="is_express_delivery">
 		<div class="formtext">
@@ -118,6 +119,7 @@
 <div class="sub_contents">
 	<label>Installation Requested Date : </label>
 	<input type="text" name="installation_requested_date" value="{{purchase.installation_requested_date}}" id="installation_date" onchange="edit_installation_requested_date_validation()"><br>
+	<input type="hidden" id="installation_date_change" name="installation_date_change" value="{{purchase.installation_requested_date_change}}">
 </div>
 <div class="formrow" id="is_express_installation">
 	<div class="formtext">
