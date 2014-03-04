@@ -16,7 +16,7 @@
 		{% if user.userprofile_set.all.0.user_type == 'customer/dealer' %}
 			<p>Welcome {{ user.userprofile_set.all.0.dealer_company_name }} Logged in : {{ user.username}}</p>
 		{% else %}
-			<p>Welcome {{ user.username}}</p>
+			<p>Welcome {{user.first_name }} Logged in: {{ user.username}}</p>
 		{% endif %}
 	</div>	
 </div>

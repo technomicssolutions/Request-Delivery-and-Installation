@@ -58,50 +58,49 @@ function delivery_requested_date_validation() {
 function edit_delivery_requested_date_validation() {
 	var purchase_date = $('#date').val();
 	var purchase_dates = convert_to_date($('#date').val());
-	console.log('purchase date'+purchase_dates.getDate());
 	var delivery_date = $('#delivery_date').val();
 	var delivery_dates = convert_to_date($('#delivery_date').val());
+	var date_change_count = $('#delivery_date_changes').val();
 	var dt = new Date();
+	date_change_count = parseInt(date_change_count) + 1;
+	var date_change_charge = date_change_count * 30
 	diff = (delivery_dates - dt)/(1000*60*60*24);
-	console.log(diff);
 	if ((delivery_dates.getDate() == dt.getDate() && delivery_dates.getMonth() == dt.getMonth() && delivery_dates.getYear() == dt.getYear()) || diff > 0) {
 		
 		if (purchase_dates.getDate() == dt.getDate() && purchase_dates.getMonth() == dt.getMonth() && purchase_dates.getYear() == dt.getYear()) {
-			console.log('equal');
 			var delivery_diff = (delivery_dates - dt)/(1000*60*60*24);
 			if (delivery_diff <= 0) {
 				if (dt.getHours() >= 12) {
-					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_delivery').show();
 				} else {
-					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+					$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_delivery').show();
 				}
 			} else if (delivery_diff > 0 && delivery_diff <= 1) {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_delivery').show();
 			} else if (delivery_diff > 1 && delivery_diff <= 2) {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_delivery').show();
 			} else {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
-				$('#is_express_delivery').hide();
+				$('#express_delivery_message').html('The Date change charge is '+date_change_charge+'$')
+				$('#is_express_delivery').show();
 			}
 		} else {
-			console.log('not equal');
 			var delivery_diff = (delivery_dates - purchase_dates)/(1000*60*60*24);
 			if (delivery_diff <= 0) {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_delivery').show();
 			} else if (delivery_diff > 0 && delivery_diff <= 1) {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_delivery').show();
 			} else if (delivery_diff > 1 && delivery_diff <= 2) {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
+				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_delivery').show();
 			} else {
-				$('#express_delivery_message').html('Express delivery charge for the selected Delivery Requested Date is 100$')
-				$('#is_express_delivery').hide();
+				$('#express_delivery_message').html('The date change charge is '+date_change_charge+'$')
+				$('#is_express_delivery').show();
 			}
 		}
 	} else if (diff < 0){
@@ -115,6 +114,9 @@ function edit_installation_requested_date_validation() {
 	var purchase_dates = convert_to_date($('#date').val());
 	var installed_date = $('#installation_date').val();
 	var installed_dates = convert_to_date($('#installation_date').val());
+	var date_change_count = $('#installation_date_change').val();
+	date_change_count = parseInt(date_change_count) + 1;
+	var date_change_charge = date_change_count * 30
 	var dt = new Date();
 	diff = (installed_dates - dt)/(1000*60*60*24);
 	if ((installed_dates.getDate() == dt.getDate() && installed_dates.getMonth() == dt.getMonth() && installed_dates.getYear() == dt.getYear()) || diff > 0) {
@@ -123,35 +125,37 @@ function edit_installation_requested_date_validation() {
 			var installed_diff = (installed_dates - dt)/(1000*60*60*24);
 			if (installed_diff <= 0) {
 				if (dt.getHours() >= 12) {
-					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 200$')
+					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_installation').show();
 				} else {
-					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 400$')
+					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_installation').show();
 				}
 			} else if (installed_diff > 0 && installed_diff <= 1) {
-				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_installation').show();
 			} else if (installed_diff > 1 && installed_diff <= 2) {
-				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_installation').show();
 			} else {
-				$('#is_express_installation').hide();
+				$('#is_express_installation').show();
+				$('#express_installation_message').html('The Date change charge is '+date_change_charge+'$')
 			}
 		} else {
 			var installed_diff = (installed_dates - purchase_dates)/(1000*60*60*24);
 			if (installed_diff <= 0) {
-				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 400$')
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_installation').show();
 				
 			} else if (installed_diff > 0 && installed_diff <= 1) {
-				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$')
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_installation').show();
 			} else if (installed_diff > 1 && installed_diff <= 2) {
-				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
+				$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$ and the Date change charge is '+date_change_charge+'$')
 				$('#is_express_installation').show();
 			} else {
-				$('#is_express_installation').hide();
+				$('#is_express_installation').show();
+				$('#express_installation_message').html('The Date change charge is '+date_change_charge+'$')
 			}
 		}
 	} else if (diff < 0){
@@ -180,7 +184,6 @@ function installation_requested_date_validation() {
 		$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
 		$('#is_express_installation').show();
 	} else {
-		$('#express_installation_message').html('Express Installation charge for the selected Installation Requested Date is 100$')
 		$('#is_express_installation').hide();
 	}
 }
