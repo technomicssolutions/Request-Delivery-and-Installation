@@ -110,9 +110,16 @@
 	<div class="sub_contents">
 		<label>Delivery Status : </label>
 		<select id="delivery_status">
-			<option value="pending" {%if purchase.delivered_status == "pending"%}selected="true"{%endif%}>Pending</option>
-			<option value="delivery_confirmed" {%if purchase.delivered_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
-			<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+			{% if pending %}
+				<option value="pending" {%if purchase.delivered_status == "pending"%}selected="true"{%endif%}>Pending</option>
+				<option value="delivery_confirmed" {%if purchase.delivered_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+				<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+			{% elif confirmed %}
+				<option value="delivery_confirmed" {%if purchase.delivered_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+				<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+			{% else %}
+				<option value="completed" {%if purchase.delivered_status == "completed"%}selected="true"{%endif%}>Completed</option>
+			{% endif %}
 		</select>
 	</div>
 {% else %}

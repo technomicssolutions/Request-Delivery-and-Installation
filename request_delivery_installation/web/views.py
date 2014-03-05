@@ -345,27 +345,35 @@ class PurchaseInfoView(View):
         current_date = datetime.datetime.now().date()
         delivered_status = False
         installed_status = False
+        pending = False
+        confirmed = False
         for purchase_detail in purchase_info.delivery_requested_date.all():
             delivery_date = purchase_detail.delivery_date
         user = request.user
         if user.is_superuser:
             installed_status = True
             delivered_status = True
+            
         if user.userprofile_set.all():
             if user.userprofile_set.all()[0].user_type == 'clerk':
+                delivered_status = True
                 if purchase_info.delivered_status == 'pending':
-                    delivered_status = True
+                    pending = True
+                elif purchase_info.delivered_status == 'delivery_confirmed':
+                    confirmed = True
             elif user.userprofile_set.all()[0].user_type == 'internal_technician':
+                installed_status = True
                 if purchase_info.installed_status == 'pending':
-                    installed_status = True
-            else:
-                installed_status = False
-                delivered_status = False
+                    pending = True
+                elif purchase_info.installed_status == 'installation_confirmed':
+                    confirmed = True
         purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%d-%m-%Y')
         context = {
             'purchase': purchase_info,
             'delivery_status': delivered_status,
-            'installed_status': installed_status
+            'installed_status': installed_status,
+            'pending': pending,
+            'confirmed': confirmed,
         }
         return render(request, 'view_purchase_info.html', context)
 
