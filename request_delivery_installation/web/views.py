@@ -364,7 +364,6 @@ class PurchaseInfoView(View):
     def post(self, request, *args, **kwargs):
 
         post_dict = request.POST
-        print post_dict
         changed_quantity = False
         changed_delivery_date = False
         current_date = datetime.datetime.now().date()
@@ -411,7 +410,6 @@ class PurchaseInfoView(View):
 
         day, month, year = post_dict['delivery_requested_date'].split('-')
         new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
-        print new_delivery_requested_date, type(new_delivery_requested_date)
         if delivery_date != new_delivery_requested_date:
             delivery_date = new_delivery_requested_date
             changed_delivery_date = True
