@@ -158,7 +158,7 @@
 		<label>Installed Status : </label>
 		<select id="installed_status">
 			<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
-			<option value="delivery_confirmed" {%if purchase.installed_status == "delivery_confirmed"%}selected="true"{%endif%}>Delivery-Confirmed</option>
+			<option value="installation_confirmed" {%if purchase.installed_status == "installation_confirmed"%}selected="true"{%endif%}>Installation-Confirmed</option>
 			<option value="completed" {%if purchase.installed_status == "completed"%}selected="true"{%endif%}>Completed</option>
 		</select>
 		
