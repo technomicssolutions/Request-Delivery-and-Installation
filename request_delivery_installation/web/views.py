@@ -177,7 +177,7 @@ class AddPurchanseInfo(View):
 
         current_date = datetime.datetime.now().date()
         current_time = datetime.datetime.now().time()
-        purchase_date = current_date.strftime('%Y-%m-%d')
+        purchase_date = current_date.strftime('%d-%m-%Y')
         context = {
             'date': purchase_date,
         }
@@ -198,7 +198,9 @@ class AddPurchanseInfo(View):
                 sl_no = 1
             purchase_info = PurchaseInformation()
             purchase_info.created_by = request.user
-            purchase_info.date = post_dict['date']
+            day, month, year = post_dict['date'].split('-')
+            purchase_date = datetime.date(int(year), int(month), int(day))
+            purchase_info.date = purchase_date
             purchase_info.slno = sl_no
             purchase_info.dealer_po_number = post_dict['dealer_po_number']
             purchase_info.delivery_order_number = post_dict['delivery_order_number']
@@ -221,11 +223,8 @@ class AddPurchanseInfo(View):
             purchase_info.delivered_status = 'pending'
             purchase_info.installed_status = 'pending'
             purchase_info.remarks = post_dict['remarks']
-
-            year, month, day = post_dict['date'].split('-')
-            purchase_date = datetime.date(int(year), int(month), int(day))
             
-            year, month, day = post_dict['installation_requested_date'].split('-')
+            day, month, year = post_dict['installation_requested_date'].split('-')
             installation_requested_date = datetime.date(int(year), int(month), int(day))
             if current_date == installation_requested_date:
                 if current_time.hour >= 12:
@@ -256,7 +255,7 @@ class AddPurchanseInfo(View):
 
             purchase_info.save()
             
-            year, month, day = post_dict['delivery_requested_date'].split('-')
+            day, month, year = post_dict['delivery_requested_date'].split('-')
             delivery_requested_date = datetime.date(int(year), int(month), int(day))
             if current_date == delivery_requested_date:
                 if current_time.hour >= 12:
@@ -342,7 +341,7 @@ class PurchaseInfoView(View):
     def get(self, request, *args, **kwargs):
 
         purchase_info = PurchaseInformation.objects.get(id=kwargs['purchase_info_id'])
-        purchase_info.date = purchase_info.date.strftime('%Y-%m-%d')
+        purchase_info.date = purchase_info.date.strftime('%d-%m-%Y')
         current_date = datetime.datetime.now().date()
         delivered_status = False
         installed_status = False
@@ -354,7 +353,7 @@ class PurchaseInfoView(View):
         if current_date >= purchase_info.installation_requested_date:
             installed_status = True
 
-        purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%Y-%m-%d')
+        purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%d-%m-%Y')
         context = {
             'purchase': purchase_info,
             'delivery_status': True,
@@ -410,18 +409,20 @@ class PurchaseInfoView(View):
             quantity = post_dict['quantity']
             changed_quantity = True
 
-        year, month, day = post_dict['delivery_requested_date'].split('-')
+        day, month, year = post_dict['delivery_requested_date'].split('-')
         new_delivery_requested_date = datetime.date(int(year), int(month), int(day))
+        print new_delivery_requested_date, type(new_delivery_requested_date)
         if delivery_date != new_delivery_requested_date:
             delivery_date = new_delivery_requested_date
             changed_delivery_date = True
         
         if changed_delivery_date or changed_quantity:
-            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=post_dict['delivery_requested_date'])
+            quantity_delivery_date = QuantityDeliveryDate.objects.create(quantity= quantity, delivery_date=new_delivery_requested_date)
             
-            year, month, day = quantity_delivery_date.delivery_date.split('-')
-            delivery_date = datetime.date(int(year), int(month), int(day))
+            # year, month, day = quantity_delivery_date.delivery_date.split('-')
+            # delivery_date = datetime.date(int(year), int(month), int(day))
 
+            delivery_date = quantity_delivery_date.delivery_date
             if current_date == delivery_date:
                 if current_time.hour >= 12:
                     next_date = (datetime.datetime.now() + timedelta(days = 1)).date()
@@ -463,12 +464,9 @@ class PurchaseInfoView(View):
             purchase_info.delivery_requested_express_delivery = purchase_info.delivery_requested_express_delivery
             purchase_info.save()
 
-        year, month, day = post_dict['installation_requested_date'].split('-')
+        day, month, year = post_dict['installation_requested_date'].split('-')
         installation_requested_date = datetime.date(int(year), int(month), int(day))
-        print installation_requested_date
-        print purchase_info.installation_requested_date
         if purchase_info.installation_requested_date != installation_requested_date:
-            print "in installed_status"
             purchase_info.installation_requested_date_change = purchase_info.installation_requested_date_change + 1
 
             if current_date == installation_requested_date:
@@ -499,7 +497,7 @@ class PurchaseInfoView(View):
             else:
                 purchase_info.installation_requested_charge = 0
             purchase_info.installation_requested_date_change_charge = int(purchase_info.installation_requested_date_change) * 30
-            purchase_info.installation_requested_date = post_dict['installation_requested_date']
+            purchase_info.installation_requested_date = installation_requested_date
             purchase_info.save() 
         else:
             purchase_info.installation_requested_express_delivery = purchase_info.installation_requested_express_delivery

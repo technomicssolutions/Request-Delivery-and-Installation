@@ -18,8 +18,10 @@ function get_day_name(day) {
 
 
 function convert_to_date(date_val) {
+	console.log(date_val);
 	var date_value = date_val.split('-');
-	var converted_date = new Date(date_value[0],date_value[1]-1, date_value[2]);
+	var converted_date = new Date(date_value[2],date_value[1]-1, date_value[0]);
+	console.log(converted_date);
 	return converted_date;
 }
 
@@ -125,10 +127,10 @@ function edit_installation_requested_date_validation() {
 			var installed_diff = (installed_dates - dt)/(1000*60*60*24);
 			if (installed_diff <= 0) {
 				if (dt.getHours() >= 12) {
-					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
+					$('#express_installation_message').html('Express delivery charge for the selected Installation Requested Date is 200$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_installation').show();
 				} else {
-					$('#express_installation_message').html('Express delivery charge for the selected Delivery Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
+					$('#express_installation_message').html('Express delivery charge for the selected Installation Requested Date is 400$ and the Date change charge is '+date_change_charge+'$')
 					$('#is_express_installation').show();
 				}
 			} else if (installed_diff > 0 && installed_diff <= 1) {
