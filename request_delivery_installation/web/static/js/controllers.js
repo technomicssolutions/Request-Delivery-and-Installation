@@ -18,10 +18,8 @@ function get_day_name(day) {
 
 
 function convert_to_date(date_val) {
-	console.log(date_val);
 	var date_value = date_val.split('-');
 	var converted_date = new Date(date_value[2],date_value[1]-1, date_value[0]);
-	console.log(converted_date);
 	return converted_date;
 }
 
