@@ -26,7 +26,7 @@ class Home(View):
                 last_two_months = current_date - datetime.timedelta(days=3*30)
                 purchase_info = PurchaseInformation.objects.filter(date__gte=last_two_months, brand=brand).order_by('-date')
             elif user.userprofile_set.all()[0].user_type == 'clerk':
-                purchase_info = PurchaseInformation.objects.all().order_by('slno')
+                purchase_info = PurchaseInformation.objects.all().order_by('-delivery_requested_date__delivery_date') 
             elif user.userprofile_set.all()[0].user_type == 'internal_technician':
                 purchase_info = PurchaseInformation.objects.all().order_by('-installation_requested_date')
             else:
@@ -347,6 +347,9 @@ class PurchaseInfoView(View):
         installed_status = False
         pending = False
         confirmed = False
+        not_delivered = False
+        not_confirmed = False
+        not_pending = False
         for purchase_detail in purchase_info.delivery_requested_date.all():
             delivery_date = purchase_detail.delivery_date
         user = request.user
@@ -363,10 +366,24 @@ class PurchaseInfoView(View):
                     confirmed = True
             elif user.userprofile_set.all()[0].user_type == 'internal_technician':
                 installed_status = True
-                if purchase_info.installed_status == 'pending':
+
+                if purchase_info.delivered_status == 'completed' and purchase_info.installed_status == 'pending':
                     pending = True
-                elif purchase_info.installed_status == 'installation_confirmed':
+                
+                elif purchase_info.delivered_status == 'completed' and purchase_info.installed_status == 'installation_confirmed':
+                    not_pending = True
+                
+                elif purchase_info.delivered_status == 'delivery_confirmed' and purchase_info.installed_status == 'installation_confirmed':
                     confirmed = True
+                
+                elif purchase_info.delivered_status == 'delivery_confirmed' and purchase_info.installed_status == 'pending':
+                    not_delivered = True
+                
+                elif purchase_info.delivered_status == 'pending':
+                    not_confirmed = True
+                    
+                # elif purchase_info.installed_status == 'installation_confirmed' and purchase_info.delivered_status != 'completed':
+                #     not_delivered = True
         purchase_info.installation_requested_date = purchase_info.installation_requested_date.strftime('%d-%m-%Y')
         context = {
             'purchase': purchase_info,
@@ -374,6 +391,9 @@ class PurchaseInfoView(View):
             'installed_status': installed_status,
             'pending': pending,
             'confirmed': confirmed,
+            'not_delivered': not_delivered,
+            'not_confirmed': not_confirmed,
+            'not_pending': not_pending
         }
         return render(request, 'view_purchase_info.html', context)
 

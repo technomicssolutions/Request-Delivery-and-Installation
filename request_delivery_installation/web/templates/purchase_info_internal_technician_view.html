@@ -162,12 +162,20 @@
 {% if installed_status %}
 	<div class="sub_contents">
 		<label>Installed Status : </label>
+		{{purchase.installed_status}}
 		<select id="installed_status">
 			{% if pending %}
 				<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
 				<option value="installation_confirmed" {%if purchase.installed_status == "installation_confirmed"%}selected="true"{%endif%}>Installation-Confirmed</option>
 				<option value="completed" {%if purchase.installed_status == "completed"%}selected="true"{%endif%}>Completed</option>
+			{% elif not_delivered %}
+				<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
+				<option value="installation_confirmed" {%if purchase.installed_status == "installation_confirmed"%}selected="true"{%endif%}>Installation-Confirmed</option>
+			{% elif not_confirmed %}
+				<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
 			{% elif confirmed %}
+				<option value="installation_confirmed" {%if purchase.installed_status == "installation_confirmed"%}selected="true"{%endif%}>Installation-Confirmed</option>
+			{% elif not_pending %}
 				<option value="installation_confirmed" {%if purchase.installed_status == "installation_confirmed"%}selected="true"{%endif%}>Installation-Confirmed</option>
 				<option value="completed" {%if purchase.installed_status == "completed"%}selected="true"{%endif%}>Completed</option>
 			{% else %}
