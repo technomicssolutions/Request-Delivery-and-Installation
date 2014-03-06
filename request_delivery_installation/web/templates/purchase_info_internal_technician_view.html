@@ -162,7 +162,6 @@
 {% if installed_status %}
 	<div class="sub_contents">
 		<label>Installed Status : </label>
-		{{purchase.installed_status}}
 		<select id="installed_status">
 			{% if pending %}
 				<option value="pending" {%if purchase.installed_status == "pending"%}selected="true"{%endif%}>Pending</option>
